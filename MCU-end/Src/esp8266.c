@@ -19,7 +19,42 @@ extern volatile Escalator escalator;
 volatile uint8_t pdata wifiSendBuffer[SEND_BUFFER_SIZE] = {0};
 volatile uint8_t pdata wifiRecvBuffer[RECV_BUFFER_SIZE] = {0};
 
-SI_SBIT(LED0, SFR_P1, 4); 
+/* Start from arm[0], is arm from left to right */
+void wifiPosDataEncode(void) /* we are going to deprecate POS_5of5 since its value is too close, maybe is sample rate or resolution, but on volt meter it got almost same value */
+{
+	uint8_t index = 0;
+	wifiSendBuffer[index++] = (escalator.arm[0].currentPos + 1); /* +1 is used to send actual pos, ex 1 at pos 1, 2 at pos 2, or it may be 3 at pos 4 */
+	wifiSendBuffer[index++] = (escalator.arm[1].currentPos + 1); 
+	wifiSendBuffer[index++] = (escalator.arm[2].currentPos + 1); 
+}
+
+void wifiInit(void)
+{
+	wifi.errorCount = 0;
+	wifi.isDataChanged = 0;
+	wifi.state = INIT;
+	wifi.currentTick = 0;
+}
+
+// since this section is eating out SRAM, I turn it off. define it if you want to use in the future
+#ifdef WIFI
+
+/* @brief	Apply DAC data received from PC */
+void wifiApplyDACdata(void)
+{
+	uint8_t savedpage = SFRPAGE;
+
+	SFRPAGE = PG4_PAGE;
+
+	DAC0L = wifiRecvBuffer[WIFI_DAC_DATA_SIZE - 6]; /* first byte PC sent */
+	DAC0H = wifiRecvBuffer[WIFI_DAC_DATA_SIZE - 5];
+	DAC1L = wifiRecvBuffer[WIFI_DAC_DATA_SIZE - 4];
+	DAC1H = wifiRecvBuffer[WIFI_DAC_DATA_SIZE - 3];
+	DAC2L = wifiRecvBuffer[WIFI_DAC_DATA_SIZE - 2];
+	DAC2H = wifiRecvBuffer[WIFI_DAC_DATA_SIZE - 1];
+	
+	SFRPAGE = savedpage;
+}
 
 void wifiProcess(void)
 {
@@ -172,31 +207,8 @@ void wifiProcess(void)
 			break;
 	}	
 }
-/* @brief	Apply DAC data received from PC */
-void wifiApplyDACdata(void)
-{
-	uint8_t savedpage = SFRPAGE;
 
-	SFRPAGE = PG4_PAGE;
 
-	DAC0L = wifiRecvBuffer[WIFI_DAC_DATA_SIZE - 6]; /* first byte PC sent */
-	DAC0H = wifiRecvBuffer[WIFI_DAC_DATA_SIZE - 5];
-	DAC1L = wifiRecvBuffer[WIFI_DAC_DATA_SIZE - 4];
-	DAC1H = wifiRecvBuffer[WIFI_DAC_DATA_SIZE - 3];
-	DAC2L = wifiRecvBuffer[WIFI_DAC_DATA_SIZE - 2];
-	DAC2H = wifiRecvBuffer[WIFI_DAC_DATA_SIZE - 1];
-	
-	SFRPAGE = savedpage;
-}
-
-/* Start from arm[0], is arm from left to right */
-void wifiPosDataEncode(void) /* we are going to deprecate POS_5of5 since its value is too close, maybe is sample rate or resolution, but on volt meter it got almost same value */
-{
-	uint8_t index = 0;
-	wifiSendBuffer[index++] = (escalator.arm[0].currentPos + 1); /* +1 is used to send actual pos, ex 1 at pos 1, 2 at pos 2, or it may be 3 at pos 4 */
-	wifiSendBuffer[index++] = (escalator.arm[1].currentPos + 1); 
-	wifiSendBuffer[index++] = (escalator.arm[2].currentPos + 1); 
-}
 /* TODO: WARN: command uses this func to encode should check if size of it exceeded size of sendbuffer, and either command or option can't has \0 since the func treat it as end of data */
 void wifiCommandEncode(uint8_t* command, uint8_t* option)
 {
@@ -425,13 +437,6 @@ void wifiModuleInit(void)
 	//LED0 = ~LED0;
 }
 
-void wifiInit(void)
-{
-	wifi.errorCount = 0;
-	wifi.isDataChanged = 0;
-	wifi.Cstate = RST;
-	wifi.state = INIT;
-	wifi.currentTick = 0;
-}
+#endif
 
 /*************flawless0714 * END OF FILE****/

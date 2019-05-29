@@ -1,4 +1,4 @@
-// Ver 1.0.0
+// Ver 2.0.0
 /*
     1. Since the complicate step to setup wifi module(esp8266) (but I don't think so, you use wifi you should configure connection on PC each time), we temporary deprecated the wifi transfer method and use USB-TTL instead.
     2. The IR sensors (RX) we using now got unstable output signal, which cause us can't use timer-trigger way to implement the system, which is more power-efficient. Maybe a short timer trigger is satisfied, this is TODO.
@@ -17,29 +17,6 @@ SI_SBIT (BC_EN, SFR_P2, 2);
 SI_SBIT(LED0, SFR_P1, 4);// P3.4 LED0
 //uint32_t debugTick = 0;
 
-/* This is deprecated since we have a program specified to do this, and it is ok to merge that program into this one, this is TODO */
-void IR_validation(void) /*TODO add to support 3 set once connected, its */
-{
-		volatile uint32_t tick = 0;
-	
-		LED0 = 1;
-waiting:
-		if (!p0_1 && !p0_3/* && \
-				!p1_2 && !p1_3 && !p1_5 && !p1_6 && !p1_7 && \
-				!p2_0 && !p2_1 && !p2_3 && !p2_4 && !p2_5 */) 
-				tick = mcu.sysTick;
-holding:		
-		if (p0_1 || p0_3 )
-				goto waiting;
-		
-		if ((tick + 1000) <= mcu.sysTick) {
-				LED0 = 0;
-				return;
-		}
-		else
-			goto holding;
-}
-
 void main()
 {
     Init();
@@ -56,10 +33,6 @@ void main()
         escalatorProcess();
     }
 }
-
-
-
-
 
 void Init(void)
 {

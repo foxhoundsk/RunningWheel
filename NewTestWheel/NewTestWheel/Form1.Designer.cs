@@ -32,6 +32,9 @@
             System.Windows.Forms.Label label9_1;
             System.Windows.Forms.Label label8;
             System.Windows.Forms.Label label10;
+            System.Windows.Forms.Label label24;
+            System.Windows.Forms.Label label25;
+            System.Windows.Forms.Label label26;
             this.ResultFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.NetworkTimer = new System.Windows.Forms.Timer(this.components);
             this.CountdownTimer = new System.Windows.Forms.Timer(this.components);
@@ -42,6 +45,7 @@
             this.SetUp = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel8 = new System.Windows.Forms.Panel();
+            this.Successive_mode = new System.Windows.Forms.CheckBox();
             this.Freeway_mode = new System.Windows.Forms.CheckBox();
             this.FileSelectButton = new System.Windows.Forms.Button();
             this.TimeConsuming = new System.Windows.Forms.NumericUpDown();
@@ -170,9 +174,17 @@
             this.label17 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.trainingTimeElapsed = new System.Windows.Forms.Timer(this.components);
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Successive_speed_lv_L = new System.Windows.Forms.NumericUpDown();
+            this.Successive_speed_lv_M = new System.Windows.Forms.NumericUpDown();
+            this.Successive_speed_lv_R = new System.Windows.Forms.NumericUpDown();
+            this.Successive_timer = new System.Windows.Forms.Timer(this.components);
             label9_1 = new System.Windows.Forms.Label();
             label8 = new System.Windows.Forms.Label();
             label10 = new System.Windows.Forms.Label();
+            label24 = new System.Windows.Forms.Label();
+            label25 = new System.Windows.Forms.Label();
+            label26 = new System.Windows.Forms.Label();
             this.tabPage2.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.panel8.SuspendLayout();
@@ -217,6 +229,10 @@
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_L)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_M)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_R)).BeginInit();
             this.SuspendLayout();
             // 
             // label9_1
@@ -268,6 +284,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.Preset);
             this.tabPage2.Controls.Add(this.Schedule);
             this.tabPage2.Controls.Add(this.SetUp);
@@ -284,7 +301,7 @@
             // 
             this.Preset.BackColor = System.Drawing.Color.White;
             this.Preset.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Preset.Location = new System.Drawing.Point(847, 346);
+            this.Preset.Location = new System.Drawing.Point(847, 439);
             this.Preset.Name = "Preset";
             this.Preset.Size = new System.Drawing.Size(88, 39);
             this.Preset.TabIndex = 91;
@@ -294,7 +311,7 @@
             // 
             // Schedule
             // 
-            this.Schedule.Location = new System.Drawing.Point(6, 346);
+            this.Schedule.Location = new System.Drawing.Point(13, 439);
             this.Schedule.MarqueeAnimationSpeed = 50;
             this.Schedule.Name = "Schedule";
             this.Schedule.Size = new System.Drawing.Size(828, 39);
@@ -304,7 +321,7 @@
             // 
             this.SetUp.BackColor = System.Drawing.Color.White;
             this.SetUp.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SetUp.Location = new System.Drawing.Point(944, 346);
+            this.SetUp.Location = new System.Drawing.Point(944, 439);
             this.SetUp.Name = "SetUp";
             this.SetUp.Size = new System.Drawing.Size(88, 39);
             this.SetUp.TabIndex = 89;
@@ -332,6 +349,7 @@
             // 
             // panel8
             // 
+            this.panel8.Controls.Add(this.Successive_mode);
             this.panel8.Controls.Add(this.Freeway_mode);
             this.panel8.Controls.Add(this.FileSelectButton);
             this.panel8.Controls.Add(label9_1);
@@ -346,10 +364,20 @@
             this.panel8.Size = new System.Drawing.Size(515, 162);
             this.panel8.TabIndex = 3;
             // 
+            // Successive_mode
+            // 
+            this.Successive_mode.AutoSize = true;
+            this.Successive_mode.Location = new System.Drawing.Point(372, 43);
+            this.Successive_mode.Name = "Successive_mode";
+            this.Successive_mode.Size = new System.Drawing.Size(132, 23);
+            this.Successive_mode.TabIndex = 102;
+            this.Successive_mode.Text = "Successive mode";
+            this.Successive_mode.UseVisualStyleBackColor = true;
+            // 
             // Freeway_mode
             // 
             this.Freeway_mode.AutoSize = true;
-            this.Freeway_mode.Location = new System.Drawing.Point(336, 14);
+            this.Freeway_mode.Location = new System.Drawing.Point(372, 14);
             this.Freeway_mode.Name = "Freeway_mode";
             this.Freeway_mode.Size = new System.Drawing.Size(119, 23);
             this.Freeway_mode.TabIndex = 101;
@@ -1941,12 +1969,135 @@
             this.trainingTimeElapsed.Interval = 1000;
             this.trainingTimeElapsed.Tick += new System.EventHandler(this.trainingTimeElapsed_Tick);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.Successive_speed_lv_R);
+            this.groupBox1.Controls.Add(this.Successive_speed_lv_M);
+            this.groupBox1.Controls.Add(this.Successive_speed_lv_L);
+            this.groupBox1.Controls.Add(label26);
+            this.groupBox1.Controls.Add(label25);
+            this.groupBox1.Controls.Add(label24);
+            this.groupBox1.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(526, 346);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(519, 87);
+            this.groupBox1.TabIndex = 92;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Successive Mode Maximum Speed Settings";
+            // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label24.Location = new System.Drawing.Point(19, 34);
+            label24.Name = "label24";
+            label24.Size = new System.Drawing.Size(40, 19);
+            label24.TabIndex = 97;
+            label24.Text = "Left :";
+            // 
+            // label25
+            // 
+            label25.AutoSize = true;
+            label25.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label25.Location = new System.Drawing.Point(196, 34);
+            label25.Name = "label25";
+            label25.Size = new System.Drawing.Size(59, 19);
+            label25.TabIndex = 98;
+            label25.Text = "Middle :";
+            // 
+            // label26
+            // 
+            label26.AutoSize = true;
+            label26.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label26.Location = new System.Drawing.Point(382, 34);
+            label26.Name = "label26";
+            label26.Size = new System.Drawing.Size(47, 19);
+            label26.TabIndex = 99;
+            label26.Text = "Right :";
+            // 
+            // Successive_speed_lv_L
+            // 
+            this.Successive_speed_lv_L.BackColor = System.Drawing.Color.White;
+            this.Successive_speed_lv_L.Location = new System.Drawing.Point(65, 32);
+            this.Successive_speed_lv_L.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.Successive_speed_lv_L.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.Successive_speed_lv_L.Name = "Successive_speed_lv_L";
+            this.Successive_speed_lv_L.Size = new System.Drawing.Size(71, 26);
+            this.Successive_speed_lv_L.TabIndex = 107;
+            this.Successive_speed_lv_L.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.Successive_speed_lv_L.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // Successive_speed_lv_M
+            // 
+            this.Successive_speed_lv_M.BackColor = System.Drawing.Color.White;
+            this.Successive_speed_lv_M.Location = new System.Drawing.Point(261, 32);
+            this.Successive_speed_lv_M.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.Successive_speed_lv_M.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.Successive_speed_lv_M.Name = "Successive_speed_lv_M";
+            this.Successive_speed_lv_M.Size = new System.Drawing.Size(71, 26);
+            this.Successive_speed_lv_M.TabIndex = 108;
+            this.Successive_speed_lv_M.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.Successive_speed_lv_M.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // Successive_speed_lv_R
+            // 
+            this.Successive_speed_lv_R.BackColor = System.Drawing.Color.White;
+            this.Successive_speed_lv_R.Location = new System.Drawing.Point(435, 32);
+            this.Successive_speed_lv_R.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.Successive_speed_lv_R.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.Successive_speed_lv_R.Name = "Successive_speed_lv_R";
+            this.Successive_speed_lv_R.Size = new System.Drawing.Size(71, 26);
+            this.Successive_speed_lv_R.TabIndex = 109;
+            this.Successive_speed_lv_R.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.Successive_speed_lv_R.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // Successive_timer
+            // 
+            this.Successive_timer.Interval = 1000;
+            this.Successive_timer.Tick += new System.EventHandler(this.Successive_timer_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.ClientSize = new System.Drawing.Size(1080, 456);
+            this.ClientSize = new System.Drawing.Size(1080, 568);
             this.Controls.Add(this.tabControl1);
             this.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -2006,6 +2157,11 @@
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_L)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_M)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_R)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2149,6 +2305,12 @@
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.CheckBox Successive_mode;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.NumericUpDown Successive_speed_lv_R;
+        private System.Windows.Forms.NumericUpDown Successive_speed_lv_M;
+        private System.Windows.Forms.NumericUpDown Successive_speed_lv_L;
+        private System.Windows.Forms.Timer Successive_timer;
     }
 }
 

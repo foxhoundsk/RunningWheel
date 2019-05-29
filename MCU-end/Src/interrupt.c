@@ -12,6 +12,12 @@ extern volatile uint8_t pdata wifiRecvBuffer[RECV_BUFFER_SIZE];
 extern volatile Uart uart;
 extern volatile Mcu mcu;
 extern volatile Wifi wifi;
+extern volatile Successive_tv pdata ssv_tv;
+extern const uint16_t pdata dac_speed_table[11];
+volatile uint8_t pdata ssv_lv_idx_L = 2; // starts from lv2 which is the index of next DAC assignment
+volatile uint8_t pdata ssv_lv_idx_M = 2;
+volatile uint8_t pdata ssv_lv_idx_R = 2;
+volatile uint16_t tick_in_sec;
 sbit IR38K=P0^2;
 
 SI_SBIT(LED0, SFR_P1, 4); // P3.4 LED0
@@ -78,6 +84,48 @@ void TIMER2_ISR(void) interrupt TIMER2_IRQn
     TMR2CN0_TF2H = 0;
     
     mcu.sysTick++;
+
+    if (escalator.mode == SUCCESSIVE)
+    {
+        if (mcu.sysTick % 1000 == 0 && mcu.sysTick > 1000)
+            tick_in_sec++;
+
+        if (tick_in_sec % ssv_tv.L_wheel == 0 && mcu.sysTick % 1000 == 0)
+        {
+            savedPage = SFRPAGE;
+	        SFRPAGE = PG4_PAGE;
+            DAC0L = (uint8_t) dac_speed_table[ssv_lv_idx_L % MAX_SPEED_LV] & 0xff;
+	        DAC0H = (uint8_t) (dac_speed_table[ssv_lv_idx_L % MAX_SPEED_LV] >> 8);
+            ssv_lv_idx_L++;
+            
+            SFRPAGE = savedPage;
+        } 
+
+        if (tick_in_sec % ssv_tv.M_wheel == 0 && mcu.sysTick % 1000 == 0)
+        {
+            savedPage = SFRPAGE;
+	        SFRPAGE = PG4_PAGE;
+
+            DAC1L = (uint8_t) dac_speed_table[ssv_lv_idx_M % MAX_SPEED_LV] & 0xff;
+	        DAC1H = (uint8_t) (dac_speed_table[ssv_lv_idx_M % MAX_SPEED_LV] >> 8);
+            ssv_lv_idx_M++;
+            
+            SFRPAGE = savedPage;
+        }
+
+        if (tick_in_sec % ssv_tv.R_wheel == 0 && mcu.sysTick % 1000 == 0)
+        {
+            savedPage = SFRPAGE;
+	        SFRPAGE = PG4_PAGE;
+
+            DAC1L = (uint8_t) dac_speed_table[ssv_lv_idx_R % MAX_SPEED_LV] & 0xff;
+	        DAC1H = (uint8_t) (dac_speed_table[ssv_lv_idx_R % MAX_SPEED_LV] >> 8);
+            ssv_lv_idx_R++;
+            
+            SFRPAGE = savedPage;
+        }
+    }
+    
     //if (/*(wifi.state == RUNNING_TRAINING) &&*/ (mcu.sysTick % 1000 == 0))
     //{
     //    LED0 = ~LED0;

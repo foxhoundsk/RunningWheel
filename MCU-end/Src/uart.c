@@ -6,14 +6,24 @@ extern volatile Wifi wifi;
 extern volatile Escalator escalator;
 extern volatile uint8_t pdata wifiSendBuffer[SEND_BUFFER_SIZE];
 extern volatile uint8_t pdata wifiRecvBuffer[RECV_BUFFER_SIZE];
+extern const uint16_t pdata dac_speed_table[11];
+extern volatile uint16_t tick_in_sec;
+extern volatile uint8_t pdata ssv_lv_idx_L;
+extern volatile uint8_t pdata ssv_lv_idx_M;
+extern volatile uint8_t pdata ssv_lv_idx_R;
+extern volatile uint8_t pdata L_emer_flag, M_emer_flag, R_emer_flag;
+
 volatile Uart uart;
 extern volatile Mcu mcu;
+
+volatile Successive_tv pdata ssv_tv;
+
 SI_SBIT(LED0, SFR_P1, 4);
+
 /* WARN: TODO: if this func encountered 0(null) in sendbuffer it will treat it as end of data then stop counting data requeste to send */
 /* UART send function
  * @buffer: pointer to send buffer
  * @byteWaiting: bytes expect to received after this transmission
- * retval: N/A
  */
 void uartSend(uint8_t* buffer, uint8_t byteWaiting)
 {
@@ -58,9 +68,8 @@ void uartIsDataQueue(void)
 {
 	if (wifi.isDataChanged) /* the flag is cleared once DAC data send back */
 	{
-		if (escalator.mode == NORMAL)
+		if (escalator.mode == NORMAL || escalator.mode == SUCCESSIVE)
 			wifiPosDataEncode();
-		else if (escalator.mode == FREE_WAY); // NOP
 
 		uartSend(&wifiSendBuffer, UART_DAC_SIZE);
 	}
@@ -82,11 +91,11 @@ void uartTransmission(void)
 					uart.queuingByte = 0;
 					uart.currentPos = 0;	/* this shall implemented as function since we usually use it to reset problemed uart */
 					uart.byteWaiting = UART_KNOCK_DOOR_SIZE;
+					wifi.currentTick = mcu.sysTick; /* FIXED: update wifi tick to prevent keep entering this statement once error occured */
 				}
 			}
 			break;
 		case IDLE:
-			//LED0 = 0;
 			uartIsDataQueue();
 			break;
 		case TX_BUSY:
@@ -131,10 +140,54 @@ void uartApplyDACData(void)
 
 bool uartIsDataKnockDoor(void)	/* with this implementation, data similarity should be considered, AND WARN THAT IF THE PACKET IS MALFORMED*/
 {
+	uint8_t savedpage;
 	if (wifiRecvBuffer[0] == 0x88) /* verify mode bit */
 	{
 		escalator.mode = FREE_WAY;
 		wifiRecvBuffer[0] = 0x52; /* clear mode bit */
+	}
+	else if (wifiRecvBuffer[0] == 0x48)
+	{
+		escalator.mode = SUCCESSIVE;
+		wifiRecvBuffer[0] = 0x52; /* clear mode bit, in the other hand, set it back to 'R' */
+
+		// store time interval of successive mode
+		ssv_tv.L_wheel = wifiRecvBuffer[2];
+		ssv_tv.L_wheel <<= 8;
+		ssv_tv.L_wheel |= wifiRecvBuffer[1];
+
+		ssv_tv.M_wheel = wifiRecvBuffer[4];
+		ssv_tv.M_wheel <<= 8;
+		ssv_tv.M_wheel |= wifiRecvBuffer[3];
+
+		ssv_tv.R_wheel = wifiRecvBuffer[6];
+		ssv_tv.R_wheel <<= 8;
+		ssv_tv.R_wheel |= wifiRecvBuffer[5];
+
+		ssv_lv_idx_L = 2;
+		ssv_lv_idx_M = 2;
+		ssv_lv_idx_R = 2;
+
+		savedpage = SFRPAGE;
+		SFRPAGE = PG4_PAGE;
+
+		// start from speed level 1
+		DAC0L = 0x74;
+		DAC0H = 0x01;
+		DAC1L = 0x74;
+		DAC1H = 0x01;
+		DAC2L = 0x74;
+		DAC2H = 0x01;
+		
+		SFRPAGE = savedpage;
+
+		// EMER flags
+		L_emer_flag = 0;
+		M_emer_flag = 0;
+		R_emer_flag = 0;
+
+		mcu.sysTick = 0; // we need a clock start from zero to do time calculation
+		tick_in_sec = 1; // start from 1 due to 1000ms ~ 0ms count as 0 when modulo with 1000
 	}
 	if ((wifiRecvBuffer[0] == 'R') && (wifiRecvBuffer[1] == 'D') && (wifiRecvBuffer[2] == 'Y'))	
 	{		
@@ -192,6 +245,22 @@ bool uartIsEndTrainData(void)	/* with this implementation, data similarity shoul
 		wifi.currentTick = mcu.sysTick;
 		while ((wifi.currentTick + DAC_APPLY_TIME) >= mcu.sysTick);
 		wifi.currentTick = 0;
+
+		if (escalator.mode == SUCCESSIVE)
+		{
+			ssv_tv.L_wheel = 0;
+			ssv_tv.L_wheel = 0;
+			ssv_tv.L_wheel = 0;
+
+			ssv_tv.M_wheel = 0;
+			ssv_tv.M_wheel = 0;
+			ssv_tv.M_wheel = 0;
+
+			ssv_tv.R_wheel = 0;
+			ssv_tv.R_wheel = 0;
+			ssv_tv.R_wheel = 0;
+		}
+
 		escalator.mode = NORMAL;
 		/*--------------------------*/
 		memset(&wifiRecvBuffer, 0, RECV_BUFFER_SIZE);

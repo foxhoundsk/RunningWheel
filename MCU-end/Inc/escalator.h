@@ -7,9 +7,8 @@
 
 #include "esp8266.h"
 
+#define MAX_SPEED_LV 11
 
-	 
-	 
 void escalatorProcess(void);
 
 typedef enum
@@ -32,7 +31,8 @@ typedef enum
 typedef enum
 {
     NORMAL = 1,
-    FREE_WAY
+    FREE_WAY,
+    SUCCESSIVE
 }MODE;
 
 typedef struct
@@ -40,11 +40,19 @@ typedef struct
     uint32_t variability[5];
     uint8_t lastPos;
     uint8_t currentPos;
-}Arm;
+}Wheel;
 
 typedef struct
 {
-    Arm arm[3];
+    uint16_t L_wheel;
+    uint16_t M_wheel;
+    uint16_t R_wheel;
+}Successive_tv;
+
+
+typedef struct
+{
+    Wheel arm[3];
     MODE mode;
     uint8_t intervalFlag;
 }Escalator;

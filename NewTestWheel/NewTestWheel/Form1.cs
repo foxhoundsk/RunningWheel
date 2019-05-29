@@ -17,15 +17,16 @@ namespace NewTestWheel
 {
     public partial class Form1 : Form
     {
+        string[] ui_speed = new string[11] {"0", "1.13", "1.63", "3.01", "3.36", "4.51", "5.05", "6.27", "6.77", "8.04", "8.67"};
         byte[] recvBuffer = new byte[64];
         byte[] dataBuffer = new byte[100];
         byte[] sendBuffer = new byte[6] { 114, 100, 0, 0, 0, 0 };
-/* this should done in macro== */       ushort[] DACtable = new ushort[11] { 0x0000, 0x0174, 0x02E8, 0x045D, 0x5D1, 0x0745, 0x08B9, 0x0A2D, 0x0BA2, 0x0D16, 0x0E8A };// [1] was 0x00F8        //ushort[] DACtable = new ushort[6] { 0x0, 0x020d, 0x041a, 0x0521, 0x0628 };
+/* magic number of speed should be done with macro */       ushort[] DACtable = new ushort[11] { 0x0000, 0x0174, 0x02E8, 0x045D, 0x5D1, 0x0745, 0x08B9, 0x0A2D, 0x0BA2, 0x0D16, 0x0E8A };// [1] was 0x00F8        //ushort[] DACtable = new ushort[6] { 0x0, 0x020d, 0x041a, 0x0521, 0x0628 };
         byte[] DACspeed = new byte[6] { 0, 0, 0, 0, 0, 0 };
         StreamWriter resultStreamWriter;
         SerialPort serialPort = new SerialPort();
         List<Byte> receiveDataList = new List<Byte>();
-        char[] knockDoorConst = new char[3] { 'R', 'D', 'Y' };
+        char[] knockDoorConst = new char[7] { 'R', 'D', 'Y','\0', '\0', '\0', '\0' };
         byte timeoutCount = 0;
         Module_Info arm_Info;
         long EndTimeStamp;
@@ -36,6 +37,15 @@ namespace NewTestWheel
         double round_R = 0;
         const double wheelDiameter = 52.0;
         /*----------------------*/
+
+        /* Successive mode related */
+        UInt16 successive_L_tv, idx_L;
+        UInt16 successive_M_tv, idx_M;
+        UInt16 successive_R_tv, idx_R;
+        UInt16 successive_time_elapsed = 0;
+        long start_timestamp;
+        /*-------------------------*/
+
         public Form1()
         {
             InitializeComponent();
@@ -220,12 +230,38 @@ namespace NewTestWheel
             switch (arm_Info.netState)
             {
                 case ConnectionStatus.CONNECTED_KNOCK_DOOR:
-                    if (!Freeway_mode.Checked) // mode check, send custome packet if it's not normal mode
-                        serialPort.Write(knockDoorConst, 0, 3);
-                    else
-                        serialPort.Write(new byte[3] { 0x88, (byte)'D', (byte)'Y' }, 0, 3); arm_Info.netState = ConnectionStatus.CONNECTED_KNOCK_DOOR_WAIT;
+                    if (!Freeway_mode.Checked && !Successive_mode.Checked) // this is normal mode
+                        serialPort.Write(knockDoorConst, 0, 7);
+                    else if (Freeway_mode.Checked)
+                        serialPort.Write(new byte[7] { 0x88, (byte)'D', (byte)'Y' ,0,0,0,0}, 0, 7); // we represent mode with bit
+                    else if (Successive_mode.Checked)
+                    {
+                        UInt16 total = (UInt16)TimeConsuming.Value;
+                        total *= 60;
 
-                    if (GetCurrentTimestamp() >= EndTimeStamp && !Freeway_mode.Checked)
+                        // note that this mechanism cause deviation of interval, which has maximum -> (max speed level - 1) seconds
+                        UInt16 left_tv = (UInt16) (total /  Successive_speed_lv_L.Value);
+                        UInt16 mid_tv = (UInt16) (total /  Successive_speed_lv_M.Value);
+                        UInt16 right_tv = (UInt16) (total / Successive_speed_lv_R.Value);
+
+                        // used to update speed display at UI
+                        successive_L_tv = left_tv;
+                        successive_M_tv = mid_tv;
+                        successive_R_tv = right_tv;
+
+                        // the first byte is mode (successive mode), [1] is low byte, whereas [2] is high byte. then you can know the preceeding ones
+                        serialPort.Write(new byte[7] { 0x48, (byte)(left_tv & 0xff), (byte)((left_tv >> 8) & 0xff), (byte)(mid_tv & 0xff), (byte)((mid_tv >> 8) & 0xff), (byte)(right_tv & 0xff), (byte)((right_tv >> 8) & 0xff) }, 0, 7);
+                        Successive_timer.Enabled = true;
+                        successive_time_elapsed = 0;
+                        start_timestamp = GetCurrentTimestamp();
+                    }
+
+                    arm_Info.netState = ConnectionStatus.CONNECTED_KNOCK_DOOR_WAIT;
+
+                    // this is an early stage detector which will validating if the training time user inputted is wrong,
+                    // which means they may set 0 minutes to training time. note that this is not a good impl, we should
+                    // move this part to settingup stage, which can throw error before start of the training. TODO
+                    if (GetCurrentTimestamp() >= EndTimeStamp && !Freeway_mode.Checked && !Successive_mode.Checked)
                     {
                         TimeAccumulationTimer.Enabled = false;
                         TimeLeft.Text = "0 : 0";
@@ -257,6 +293,8 @@ namespace NewTestWheel
                     }
                     break;
                 case ConnectionStatus.CONNECTED:
+
+                    // successive mode need this function, hence we just skip it in this statement just like normal mode
                     if (GetCurrentTimestamp() >= EndTimeStamp && !Freeway_mode.Checked)
                     {
                         TimeAccumulationTimer.Enabled = false;
@@ -270,8 +308,119 @@ namespace NewTestWheel
                     TrainingState.Text = "In Progress";
                     if (!GlobalBuffer.g_dataNeedProcess)
                         break;
-                    
-                    if (Freeway_mode.Checked)
+
+                    if (Successive_mode.Checked) 
+                    {
+                        /* location displaying for wheel 0 */
+                        RatPos = receiveDataList[0];
+                        switch (RatPos)
+                        {
+                            case 1:
+                                RatLeftAngle.ForeColor = Color.Red;
+                                RatPos = (ushort)AngleSettingLR.Value;
+                                RatLeftAngle.Text = RatPos.ToString();
+                                break;
+                            case 2:
+                                RatLeftAngle.ForeColor = Color.Yellow;
+                                RatPos = (ushort)AngleSettingLY.Value;
+                                RatLeftAngle.Text = RatPos.ToString();
+                                break;
+                            case 3:
+                                RatLeftAngle.ForeColor = Color.Green;
+                                RatPos = (ushort)AngleSettingLG.Value;
+                                RatLeftAngle.Text = RatPos.ToString();
+                                break;
+                            case 4:
+                                RatLeftAngle.ForeColor = Color.Blue;
+                                RatPos = (ushort)AngleSettingLB.Value;
+                                RatLeftAngle.Text = RatPos.ToString();
+                                break;
+                            case 5:
+                                RatLeftAngle.ForeColor = Color.Purple;
+                                RatPos = (ushort)AngleSettingLP.Value;
+                                RatLeftAngle.Text = RatPos.ToString();
+                                break;
+                        }
+                        resultStreamWriter.WriteLine("L: " + RatPos.ToString() + "°" + "  " + ui_speed[(((GetCurrentTimestamp() - start_timestamp) / successive_L_tv) + 1) % ui_speed.Count()] + " cm/s");
+
+                        /* ------------------------------- */
+                        /* location displaying for wheel 1 */
+                        RatPos = receiveDataList[1];
+                        //---------------------ratPos representation----
+                        switch (RatPos)
+                        {
+                            case 1:
+                                RatMiddleAngle.ForeColor = Color.Red;
+                                RatPos = (ushort)AngleSettingMR.Value;
+                                RatMiddleAngle.Text = RatPos.ToString();
+                                RatPos = 10;
+                                break;
+                            case 2:
+                                RatMiddleAngle.ForeColor = Color.Yellow;
+                                RatPos = (ushort)AngleSettingMY.Value;
+                                RatMiddleAngle.Text = RatPos.ToString();
+                                break;
+                            case 3:
+                                RatMiddleAngle.ForeColor = Color.Green;
+                                RatPos = (ushort)AngleSettingMG.Value;
+                                RatMiddleAngle.Text = RatPos.ToString();
+                                break;
+                            case 4:
+                                RatMiddleAngle.ForeColor = Color.Blue;
+                                RatPos = (ushort)AngleSettingMB.Value;
+                                RatMiddleAngle.Text = RatPos.ToString();
+                                break;
+                            case 5:
+                                RatMiddleAngle.ForeColor = Color.Purple;
+                                RatPos = (ushort)AngleSettingMP.Value;
+                                RatMiddleAngle.Text = RatPos.ToString();
+                                break;
+                        }
+                        resultStreamWriter.WriteLine("M: " + RatPos.ToString() + "°" + "  " + ui_speed[(((GetCurrentTimestamp() - start_timestamp) / successive_M_tv) + 1) % ui_speed.Count()] + " cm/s");
+
+                        /* ------------------------------- */
+
+                        /* location displaying for wheel 1 */
+                        RatPos = receiveDataList[2];
+                        switch (RatPos)
+                        {
+                            case 1:
+                                RatRightAngle.ForeColor = Color.Red;
+                                RatPos = (ushort)AngleSettingRR.Value;
+                                RatRightAngle.Text = RatPos.ToString();
+                                break;
+                            case 2:
+                                RatRightAngle.ForeColor = Color.Yellow;
+                                RatPos = (ushort)AngleSettingRY.Value;
+                                RatRightAngle.Text = RatPos.ToString();
+                                break;
+                            case 3:
+                                RatRightAngle.ForeColor = Color.Green;
+                                RatPos = (ushort)AngleSettingRG.Value;
+                                RatRightAngle.Text = RatPos.ToString();
+                                break;
+                            case 4:
+                                RatRightAngle.ForeColor = Color.Blue;
+                                RatPos = (ushort)AngleSettingRB.Value;
+                                RatRightAngle.Text = RatPos.ToString();
+                                break;
+                            case 5:
+                                RatRightAngle.ForeColor = Color.Purple;
+                                RatPos = (ushort)AngleSettingRP.Value;
+                                RatRightAngle.Text = RatPos.ToString();
+                                break;
+                        }
+
+                        // we get speed from current speed level. plus one is bacause level starts from one but our divsion at early start is 0
+                        resultStreamWriter.WriteLine("R: " + RatPos.ToString() + "°" + "  " + ui_speed[(((GetCurrentTimestamp() - start_timestamp) / successive_R_tv) + 1) % ui_speed.Count()] + " cm/s");
+                        /* ------------------------------- */
+
+                        serialPort.Write(DACspeed, 0, 6);
+                        receiveDataList.Clear();
+                        GlobalBuffer.g_dataNeedProcess = false;
+                        break;
+                    }
+                    else if (Freeway_mode.Checked)
                     {
                         if (receiveDataList[0] >> 7 == 1)
                         {
@@ -653,6 +802,7 @@ namespace NewTestWheel
                     }
                     break;
                 case ConnectionStatus.TRAINING_END:
+                    Successive_timer.Enabled = false;
                     if (Freeway_mode.Checked)
                     {
                         resultStreamWriter.WriteLine("Left wheel avg. speed: " + ((round_L * wheelDiameter) / Freeway_timerCount).ToString() + " cm/s" + "\r\n");
@@ -782,7 +932,7 @@ namespace NewTestWheel
         private void SetUp_Click(object sender, EventArgs e)//設定類 按鍵組
         {
             Data();            
-            if (Freeway_mode.Checked) // if Freeway_mode enabled, we set the schdule bar to 100 directly
+            if (Freeway_mode.Checked || Successive_mode.Checked) // if Freeway_mode enabled, we set the schdule bar to 100 directly
                 Schedule.Value = 100;
             if (Schedule.Value < 99)
             {
@@ -1104,6 +1254,40 @@ namespace NewTestWheel
 
         private void CountdownTimer_Tick(object sender, EventArgs e)
         {
+
+        }
+
+        private void Successive_timer_Tick(object sender, EventArgs e)
+        {
+            if (successive_time_elapsed == 0)
+            {
+                // 2 will used on first update
+                idx_L = 2;
+                idx_M = 2;
+                idx_R = 2;
+
+                RatLeftSpeed.Text = "1.13";
+                RatMiddleSpeed.Text = "1.13";
+                RatRightSpeed.Text = "1.13";
+
+            }
+
+            successive_time_elapsed++;
+
+            if (successive_time_elapsed % successive_L_tv == 0)
+            {
+                RatLeftSpeed.Text = ui_speed[idx_L++ % ui_speed.Count()]; // 11 is size of ui_speed currently
+            }
+
+            if (successive_time_elapsed % successive_M_tv == 0)
+            {
+                RatMiddleSpeed.Text = ui_speed[idx_M++ % ui_speed.Count()];
+            }
+
+            if (successive_time_elapsed % successive_R_tv == 0)
+            {
+                RatRightSpeed.Text = ui_speed[idx_R++ % ui_speed.Count()];
+            }
 
         }
     }

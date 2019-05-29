@@ -8,7 +8,7 @@
 
 #include <SI_EFM8LB1_Register_Enums.h>
 
-#define UART_KNOCK_DOOR_SIZE     3
+#define UART_KNOCK_DOOR_SIZE     7
 #define UART_TRUNCATED_WAIT_TIME 250
 #define UART_DAC_MAX_WAIT_TIME   2000
 #define UART_DAC_SIZE            6

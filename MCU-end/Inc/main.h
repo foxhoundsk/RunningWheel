@@ -39,7 +39,7 @@ void Init(void);
 
 typedef struct
 {
-    uint32_t sysTick; /* tick per second */
+    uint32_t sysTick; /* tick per millisecond */
 }Mcu;
 
 	

@@ -14,7 +14,7 @@
 #define PASSWORD "00001111\0"
 #define MODULE_ACK  "ACK\0"
 #define RECV_BUFFER_SIZE            45  /* may be smaller (43 bytes used to receive msg from PC)*/
-#define SEND_BUFFER_SIZE            50  /* may be smaller */
+#define SEND_BUFFER_SIZE            10  /* usually use less than 10 bytes... */
 #define TYPICAL_RECEIVE_SIZE        6   /* for OK-like command's return */
 #define ECHO_TURN_OFF_EDGE          13  /* at echo turn off edge, 8266 will have last echo so that the buffer should larger than typical */
 #define DEVICE_CONNECTED_SIZE       37  /* only for one device */
@@ -94,7 +94,6 @@ typedef enum
 typedef struct
 {
     ESP8266_state state;
-    CommandState Cstate; /* check declaration for detail */
     uint8_t errorCount;
     uint8_t isDataChanged;    
     uint32_t currentTick;
