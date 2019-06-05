@@ -136,7 +136,7 @@ void escalatorProcess(void)
         SFRPAGE = PG4_PAGE;
 
         // left wheel
-        if (DAC0L != 0x00 && DAC0H != 0x00 && L_emer_flag == 1)
+        if ((DAC0L != 0x00 || DAC0H != 0x00) && L_emer_flag == 1)
         {
             L_dac_reg = DAC0H;
             L_dac_reg <<= 8;
@@ -147,7 +147,7 @@ void escalatorProcess(void)
         }
 
         // middle wheel
-        if (DAC1L != 0x00 && DAC1H != 0x00 && M_emer_flag == 1)    
+        if ((DAC1L != 0x00 || DAC1H != 0x00) && M_emer_flag == 1)    
         {
             M_dac_reg = DAC1H;
             M_dac_reg <<= 8;
@@ -158,7 +158,7 @@ void escalatorProcess(void)
         }
 
         // right wheel
-        if (DAC2L != 0x00 && DAC2H != 0x00 && R_emer_flag == 1)    
+        if ((DAC2L != 0x00 || DAC2H != 0x00) && R_emer_flag == 1)    
         {
             R_dac_reg = DAC2H;
             R_dac_reg <<= 8;
