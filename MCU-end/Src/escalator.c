@@ -260,14 +260,14 @@ void escalatorProcess(void)
 					
             case MIDDLE_WHEEL:
                 //shiftedADC = (uint8_t) (adc_buf[0].p1_2 >> 8);
-                if (p1_2==0)  escalator.arm[1].variability[POS_1of5]++;
-                else if (p1_3==0) escalator.arm[1].variability[POS_2of5]++;
-                else if (p1_5==0) escalator.arm[1].variability[POS_3of5]++;
-                else if (p1_6==0) escalator.arm[1].variability[POS_4of5]++;
-								else if (p1_7==0) escalator.arm[1].variability[POS_5of5]++;
+                if (p1_2)  escalator.arm[1].variability[POS_1of5]++; else escalator.arm[1].variability[POS_1of5] = 0;
+                if (p1_3) escalator.arm[1].variability[POS_2of5]++;  else escalator.arm[1].variability[POS_2of5] = 0;
+                if (p1_5) escalator.arm[1].variability[POS_3of5]++;  else escalator.arm[1].variability[POS_3of5] = 0;
+                if (p1_6) escalator.arm[1].variability[POS_4of5]++;  else escalator.arm[1].variability[POS_4of5] = 0;
+				if (p1_7) escalator.arm[1].variability[POS_5of5]++;  else escalator.arm[1].variability[POS_5of5] = 0;
                 for (index2 = 4; index2 >= 0; index2--)
                 {
-                    if (escalator.arm[1].variability[index2] >= 750)
+                    if (escalator.arm[1].variability[index2] >= 1500)
                     {
                         escalator.arm[1].variability[POS_1of5] = 0;
 						escalator.arm[1].variability[POS_2of5] = 0;
@@ -339,14 +339,14 @@ void escalatorProcess(void)
                 }  
                 break;
             case RIGHT_WHEEL:   
-                if (p2_0==0)  escalator.arm[2].variability[POS_1of5]++;
-                else if (p2_1==0) escalator.arm[2].variability[POS_2of5]++;
-                else if (p2_3==0) escalator.arm[2].variability[POS_3of5]++;
-				else if (p2_4==0) escalator.arm[2].variability[POS_4of5]++;
-				else if (p2_5==0) escalator.arm[2].variability[POS_5of5]++;
+                if (p2_0)  escalator.arm[2].variability[POS_1of5]++; else escalator.arm[2].variability[POS_1of5] = 0;
+                if (p2_1) escalator.arm[2].variability[POS_2of5]++;  else escalator.arm[2].variability[POS_2of5] = 0;
+                if (p2_3) escalator.arm[2].variability[POS_3of5]++;  else escalator.arm[2].variability[POS_3of5] = 0;
+				if (p2_4) escalator.arm[2].variability[POS_4of5]++;  else escalator.arm[2].variability[POS_4of5] = 0;
+				if (p2_5) escalator.arm[2].variability[POS_5of5]++;  else escalator.arm[2].variability[POS_5of5] = 0;
                 for (index2 = 4; index2 >= 0; index2--)
                 {
-                    if (escalator.arm[2].variability[index2] >= 750)
+                    if (escalator.arm[2].variability[index2] >= 1500)
                     {
                         escalator.arm[2].variability[POS_1of5] = 0;
 						escalator.arm[2].variability[POS_2of5] = 0;
