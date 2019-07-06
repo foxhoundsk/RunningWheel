@@ -208,7 +208,7 @@ bool uartIsDataKnockDoor(void)	/* with this implementation, data similarity shou
 bool uartIsEndTrainData(void)	/* with this implementation, data similarity should be considered */
 {
 	uint8_t index;
-	if ((wifiRecvBuffer[0] == 'E') && (wifiRecvBuffer[1] == 'N') && (wifiRecvBuffer[2] == 'D'))	
+	if ((wifiRecvBuffer[0] == '~') && (wifiRecvBuffer[1] == 'N') && (wifiRecvBuffer[2] == 'D'))	
 	{		
 		memset(&wifiSendBuffer, 0, SEND_BUFFER_SIZE);
 		wifiSendBuffer[0] = 'A';

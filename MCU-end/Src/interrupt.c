@@ -56,7 +56,7 @@ void UART0_ISR(void) interrupt UART0_IRQn /* WARN: we only turn interrupt at nee
     {
         SCON0_RI = 0;
         /* this is to capture the end training notification data, since there is no better solution concluded, hence... (TODO) */
-        if (SBUF0 == 'E')
+        if (SBUF0 == '~')
         {
             uart.byteWaiting = UART_DAC_SIZE;
         }
