@@ -1,4 +1,4 @@
-A running wheel for lab rat.
+A medical training platform for lab rat.
 
 # Introduction
 This training platform has three set of running wheel, each one has five set of IR sensors equipped. The function of this platform is planned by medical researcher, I'm the one who only pursuit for implement the functions they required. The platform has two primary training modes:
