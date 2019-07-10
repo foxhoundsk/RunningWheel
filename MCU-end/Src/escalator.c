@@ -17,7 +17,7 @@ volatile uint16_t pdata L_dac_reg, M_dac_reg, R_dac_reg;
 void escalatorProcess(void)
 {   
     uint8_t index; /* for loop and array index use (WARN) */
-    int8_t index2;
+    int8_t index2; 
     uint8_t savedpage;
 
 	/*	WARN: debug use (known issue: this section should uncommented at release version(wifi ver), it prevent this func(escalatorProcess()) run before wifi module done its initialization and ready to send training data, although it is harmless) */
@@ -190,7 +190,7 @@ void escalatorProcess(void)
 						escalator.arm[0].variability[POS_3of5] = 0;
 						escalator.arm[0].variability[POS_4of5] = 0;
 						escalator.arm[0].variability[POS_5of5] = 0;
-                        escalator.arm[0].currentPos = index2;                        
+                        escalator.arm[0].currentPos = (uint8_t)index2;                        
 
                         if (escalator.arm[0].lastPos != escalator.arm[0].currentPos) /* check if the current pos equal to previous pos, if it doesn't, trigger isDataChanged flag which inform wifi module we got data to send */
                         {
@@ -227,7 +227,7 @@ void escalatorProcess(void)
                                     L_emer_flag = 0; // clear the flag for next use
                                 }
                             }
-                            else // normal mode
+                            else if (0) // normal mode
                             {
                                 if (index2 == POS_1of5) // emergency stop. reson why I add here is to prevent duplicate detection
                                 { 
@@ -264,7 +264,7 @@ void escalatorProcess(void)
                 if (p1_3) escalator.arm[1].variability[POS_2of5]++;  else escalator.arm[1].variability[POS_2of5] = 0;
                 if (p1_5) escalator.arm[1].variability[POS_3of5]++;  else escalator.arm[1].variability[POS_3of5] = 0;
                 if (p1_6) escalator.arm[1].variability[POS_4of5]++;  else escalator.arm[1].variability[POS_4of5] = 0;
-				if (p1_7) escalator.arm[1].variability[POS_5of5]++;  else escalator.arm[1].variability[POS_5of5] = 0;
+				// if (p1_7) escalator.arm[1].variability[POS_5of5]++;  else escalator.arm[1].variability[POS_5of5] = 0;
                 for (index2 = 4; index2 >= 0; index2--)
                 {
                     if (escalator.arm[1].variability[index2] >= 1500)
@@ -274,7 +274,7 @@ void escalatorProcess(void)
 						escalator.arm[1].variability[POS_3of5] = 0;
 						escalator.arm[1].variability[POS_4of5] = 0;
 						escalator.arm[1].variability[POS_5of5] = 0;
-                        escalator.arm[1].currentPos = index2;
+                        escalator.arm[1].currentPos = (uint8_t)index2;
                         if (escalator.arm[1].lastPos != escalator.arm[1].currentPos)
                         {
                             if (escalator.mode == SUCCESSIVE)
@@ -310,7 +310,7 @@ void escalatorProcess(void)
                                     M_emer_flag = 0; // clear the flag for next use
                                 }
                             }
-                            else
+                            else if (0)
                             {
                                 if (index2 == POS_1of5) // emergency stop. reson why I add here is to prevent duplicate detection
                                 { 
@@ -353,7 +353,7 @@ void escalatorProcess(void)
 						escalator.arm[2].variability[POS_3of5] = 0;
 						escalator.arm[2].variability[POS_4of5] = 0;
 						escalator.arm[2].variability[POS_5of5] = 0;
-                        escalator.arm[2].currentPos = index2;
+                        escalator.arm[2].currentPos = (uint8_t)index2;
                         if (escalator.arm[2].lastPos != escalator.arm[2].currentPos)
                         {
                             if (escalator.mode == SUCCESSIVE)
@@ -389,7 +389,7 @@ void escalatorProcess(void)
                                     R_emer_flag = 0; // clear the flag for next use
                                 }
                             }
-                            else
+                            else if (0)
                             {
                                 if (index2 == POS_1of5) // emergency stop. reson why I add here is to prevent duplicate detection
                                 { 
