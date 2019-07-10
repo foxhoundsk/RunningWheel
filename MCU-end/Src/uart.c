@@ -111,10 +111,13 @@ void uartTransmission(void)
 			break;
 		case END_IN_PROGRESS:
 			/* this state is intend to make a grace period to let the MCU receive
-			   the data of end training notification properly, without stay in
-			   this state, if the GUI send end data and DAC data concurrently, MCU
-			   may messed up by handling these data, so we stay here to receive
-			   end data silently. 
+			   the data of end training notification properly, without switch to
+			   this state, if we start sending location data and receive end of
+			   training data at same time, our `uart.currentPos` will got messed,
+			   which in turn makes us never receive end of training data properly.
+			   
+			   Also, this reflects bad implementation of my UART. We need to update
+			   the infrastructure of it.
 			   
 			   note: for more information, please refer to UART ISR at interrupt.c
 			*/
