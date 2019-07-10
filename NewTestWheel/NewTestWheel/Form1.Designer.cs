@@ -35,11 +35,20 @@
             System.Windows.Forms.Label label24;
             System.Windows.Forms.Label label25;
             System.Windows.Forms.Label label26;
+            System.Windows.Forms.Label label28;
+            System.Windows.Forms.Label label29;
+            System.Windows.Forms.Label label27;
+            System.Windows.Forms.Label label30;
+            System.Windows.Forms.Label label31;
             this.ResultFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.NetworkTimer = new System.Windows.Forms.Timer(this.components);
             this.CountdownTimer = new System.Windows.Forms.Timer(this.components);
             this.TimeAccumulationTimer = new System.Windows.Forms.Timer(this.components);
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Successive_speed_lv_R = new System.Windows.Forms.NumericUpDown();
+            this.Successive_speed_lv_M = new System.Windows.Forms.NumericUpDown();
+            this.Successive_speed_lv_L = new System.Windows.Forms.NumericUpDown();
             this.Preset = new System.Windows.Forms.Button();
             this.Schedule = new System.Windows.Forms.ProgressBar();
             this.SetUp = new System.Windows.Forms.Button();
@@ -174,18 +183,27 @@
             this.label17 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.trainingTimeElapsed = new System.Windows.Forms.Timer(this.components);
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.Successive_speed_lv_L = new System.Windows.Forms.NumericUpDown();
-            this.Successive_speed_lv_M = new System.Windows.Forms.NumericUpDown();
-            this.Successive_speed_lv_R = new System.Windows.Forms.NumericUpDown();
             this.Successive_timer = new System.Windows.Forms.Timer(this.components);
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.L_rat_id = new System.Windows.Forms.TextBox();
+            this.M_rat_id = new System.Windows.Forms.TextBox();
+            this.R_rat_id = new System.Windows.Forms.TextBox();
             label9_1 = new System.Windows.Forms.Label();
             label8 = new System.Windows.Forms.Label();
             label10 = new System.Windows.Forms.Label();
             label24 = new System.Windows.Forms.Label();
             label25 = new System.Windows.Forms.Label();
             label26 = new System.Windows.Forms.Label();
+            label28 = new System.Windows.Forms.Label();
+            label29 = new System.Windows.Forms.Label();
+            label27 = new System.Windows.Forms.Label();
+            label30 = new System.Windows.Forms.Label();
+            label31 = new System.Windows.Forms.Label();
             this.tabPage2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_R)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_M)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_L)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             this.panel8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TimeConsuming)).BeginInit();
@@ -229,10 +247,7 @@
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_L)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_M)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_R)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // label9_1
@@ -265,6 +280,56 @@
             label10.TabIndex = 93;
             label10.Text = "Save Location：";
             // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label24.Location = new System.Drawing.Point(19, 34);
+            label24.Name = "label24";
+            label24.Size = new System.Drawing.Size(40, 19);
+            label24.TabIndex = 97;
+            label24.Text = "Left :";
+            // 
+            // label25
+            // 
+            label25.AutoSize = true;
+            label25.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label25.Location = new System.Drawing.Point(196, 34);
+            label25.Name = "label25";
+            label25.Size = new System.Drawing.Size(59, 19);
+            label25.TabIndex = 98;
+            label25.Text = "Middle :";
+            // 
+            // label26
+            // 
+            label26.AutoSize = true;
+            label26.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label26.Location = new System.Drawing.Point(382, 34);
+            label26.Name = "label26";
+            label26.Size = new System.Drawing.Size(47, 19);
+            label26.TabIndex = 99;
+            label26.Text = "Right :";
+            // 
+            // label28
+            // 
+            label28.AutoSize = true;
+            label28.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label28.Location = new System.Drawing.Point(116, 0);
+            label28.Name = "label28";
+            label28.Size = new System.Drawing.Size(49, 22);
+            label28.TabIndex = 103;
+            label28.Text = "High";
+            // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label29.Location = new System.Drawing.Point(437, -1);
+            label29.Name = "label29";
+            label29.Size = new System.Drawing.Size(46, 22);
+            label29.TabIndex = 108;
+            label29.Text = "Low";
+            // 
             // ResultFileDialog
             // 
             this.ResultFileDialog.Filter = "文字檔 (*.txt)|*.txt|所有檔案 (*.*)|*.*";
@@ -284,6 +349,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.Preset);
             this.tabPage2.Controls.Add(this.Schedule);
@@ -296,6 +362,94 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Setting configuration";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.Successive_speed_lv_R);
+            this.groupBox1.Controls.Add(this.Successive_speed_lv_M);
+            this.groupBox1.Controls.Add(this.Successive_speed_lv_L);
+            this.groupBox1.Controls.Add(label26);
+            this.groupBox1.Controls.Add(label25);
+            this.groupBox1.Controls.Add(label24);
+            this.groupBox1.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(526, 346);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(519, 87);
+            this.groupBox1.TabIndex = 92;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Successive Mode Maximum Speed Settings";
+            // 
+            // Successive_speed_lv_R
+            // 
+            this.Successive_speed_lv_R.BackColor = System.Drawing.Color.White;
+            this.Successive_speed_lv_R.Location = new System.Drawing.Point(435, 32);
+            this.Successive_speed_lv_R.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.Successive_speed_lv_R.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.Successive_speed_lv_R.Name = "Successive_speed_lv_R";
+            this.Successive_speed_lv_R.Size = new System.Drawing.Size(71, 26);
+            this.Successive_speed_lv_R.TabIndex = 109;
+            this.Successive_speed_lv_R.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.Successive_speed_lv_R.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // Successive_speed_lv_M
+            // 
+            this.Successive_speed_lv_M.BackColor = System.Drawing.Color.White;
+            this.Successive_speed_lv_M.Location = new System.Drawing.Point(261, 32);
+            this.Successive_speed_lv_M.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.Successive_speed_lv_M.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.Successive_speed_lv_M.Name = "Successive_speed_lv_M";
+            this.Successive_speed_lv_M.Size = new System.Drawing.Size(71, 26);
+            this.Successive_speed_lv_M.TabIndex = 108;
+            this.Successive_speed_lv_M.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.Successive_speed_lv_M.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // Successive_speed_lv_L
+            // 
+            this.Successive_speed_lv_L.BackColor = System.Drawing.Color.White;
+            this.Successive_speed_lv_L.Location = new System.Drawing.Point(65, 32);
+            this.Successive_speed_lv_L.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.Successive_speed_lv_L.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.Successive_speed_lv_L.Name = "Successive_speed_lv_L";
+            this.Successive_speed_lv_L.Size = new System.Drawing.Size(71, 26);
+            this.Successive_speed_lv_L.TabIndex = 107;
+            this.Successive_speed_lv_L.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.Successive_speed_lv_L.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // Preset
             // 
@@ -313,6 +467,7 @@
             // 
             this.Schedule.Location = new System.Drawing.Point(13, 439);
             this.Schedule.MarqueeAnimationSpeed = 50;
+            this.Schedule.Maximum = 1000;
             this.Schedule.Name = "Schedule";
             this.Schedule.Size = new System.Drawing.Size(828, 39);
             this.Schedule.TabIndex = 90;
@@ -582,11 +737,9 @@
             this.AngleSettingRP.LargeChange = 1;
             this.AngleSettingRP.Location = new System.Drawing.Point(433, 86);
             this.AngleSettingRP.Maximum = 180;
-            this.AngleSettingRP.Minimum = 120;
             this.AngleSettingRP.Name = "AngleSettingRP";
             this.AngleSettingRP.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingRP.TabIndex = 107;
-            this.AngleSettingRP.Value = 150;
             this.AngleSettingRP.Scroll += new System.EventHandler(this.AngleSettingRP_Scroll);
             // 
             // SpeedSettingRG
@@ -608,12 +761,11 @@
             this.AngleSettingRB.BackColor = System.Drawing.Color.WhiteSmoke;
             this.AngleSettingRB.LargeChange = 1;
             this.AngleSettingRB.Location = new System.Drawing.Point(354, 86);
-            this.AngleSettingRB.Maximum = 150;
-            this.AngleSettingRB.Minimum = 91;
+            this.AngleSettingRB.Maximum = 180;
             this.AngleSettingRB.Name = "AngleSettingRB";
             this.AngleSettingRB.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingRB.TabIndex = 106;
-            this.AngleSettingRB.Value = 120;
+            this.AngleSettingRB.Value = 45;
             this.AngleSettingRB.Scroll += new System.EventHandler(this.AngleSettingRB_Scroll);
             // 
             // SpeedSettingRY
@@ -636,8 +788,7 @@
             this.AngleSettingRG.Enabled = false;
             this.AngleSettingRG.LargeChange = 15;
             this.AngleSettingRG.Location = new System.Drawing.Point(275, 86);
-            this.AngleSettingRG.Maximum = 120;
-            this.AngleSettingRG.Minimum = 60;
+            this.AngleSettingRG.Maximum = 180;
             this.AngleSettingRG.Name = "AngleSettingRG";
             this.AngleSettingRG.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingRG.SmallChange = 15;
@@ -665,12 +816,11 @@
             this.AngleSettingRY.BackColor = System.Drawing.Color.WhiteSmoke;
             this.AngleSettingRY.LargeChange = 1;
             this.AngleSettingRY.Location = new System.Drawing.Point(196, 86);
-            this.AngleSettingRY.Maximum = 89;
-            this.AngleSettingRY.Minimum = 30;
+            this.AngleSettingRY.Maximum = 180;
             this.AngleSettingRY.Name = "AngleSettingRY";
             this.AngleSettingRY.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingRY.TabIndex = 104;
-            this.AngleSettingRY.Value = 60;
+            this.AngleSettingRY.Value = 135;
             this.AngleSettingRY.Scroll += new System.EventHandler(this.AngleSettingRY_Scroll);
             // 
             // AngleSettingRR
@@ -678,11 +828,11 @@
             this.AngleSettingRR.BackColor = System.Drawing.Color.WhiteSmoke;
             this.AngleSettingRR.LargeChange = 1;
             this.AngleSettingRR.Location = new System.Drawing.Point(117, 86);
-            this.AngleSettingRR.Maximum = 60;
+            this.AngleSettingRR.Maximum = 180;
             this.AngleSettingRR.Name = "AngleSettingRR";
             this.AngleSettingRR.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingRR.TabIndex = 103;
-            this.AngleSettingRR.Value = 30;
+            this.AngleSettingRR.Value = 180;
             this.AngleSettingRR.Scroll += new System.EventHandler(this.AngleSettingRR_Scroll);
             // 
             // label7_7
@@ -860,11 +1010,9 @@
             this.AngleSettingMP.LargeChange = 1;
             this.AngleSettingMP.Location = new System.Drawing.Point(432, 87);
             this.AngleSettingMP.Maximum = 180;
-            this.AngleSettingMP.Minimum = 120;
             this.AngleSettingMP.Name = "AngleSettingMP";
             this.AngleSettingMP.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingMP.TabIndex = 102;
-            this.AngleSettingMP.Value = 150;
             this.AngleSettingMP.Scroll += new System.EventHandler(this.AngleSettingMP_Scroll);
             // 
             // label6_27
@@ -883,12 +1031,11 @@
             this.AngleSettingMB.BackColor = System.Drawing.Color.WhiteSmoke;
             this.AngleSettingMB.LargeChange = 1;
             this.AngleSettingMB.Location = new System.Drawing.Point(353, 87);
-            this.AngleSettingMB.Maximum = 150;
-            this.AngleSettingMB.Minimum = 91;
+            this.AngleSettingMB.Maximum = 180;
             this.AngleSettingMB.Name = "AngleSettingMB";
             this.AngleSettingMB.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingMB.TabIndex = 101;
-            this.AngleSettingMB.Value = 120;
+            this.AngleSettingMB.Value = 45;
             this.AngleSettingMB.Scroll += new System.EventHandler(this.AngleSettingMB_Scroll);
             // 
             // label6_17
@@ -908,8 +1055,7 @@
             this.AngleSettingMG.Enabled = false;
             this.AngleSettingMG.LargeChange = 15;
             this.AngleSettingMG.Location = new System.Drawing.Point(274, 87);
-            this.AngleSettingMG.Maximum = 120;
-            this.AngleSettingMG.Minimum = 60;
+            this.AngleSettingMG.Maximum = 180;
             this.AngleSettingMG.Name = "AngleSettingMG";
             this.AngleSettingMG.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingMG.SmallChange = 15;
@@ -923,12 +1069,11 @@
             this.AngleSettingMY.BackColor = System.Drawing.Color.WhiteSmoke;
             this.AngleSettingMY.LargeChange = 1;
             this.AngleSettingMY.Location = new System.Drawing.Point(195, 87);
-            this.AngleSettingMY.Maximum = 89;
-            this.AngleSettingMY.Minimum = 30;
+            this.AngleSettingMY.Maximum = 180;
             this.AngleSettingMY.Name = "AngleSettingMY";
             this.AngleSettingMY.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingMY.TabIndex = 99;
-            this.AngleSettingMY.Value = 60;
+            this.AngleSettingMY.Value = 135;
             this.AngleSettingMY.Scroll += new System.EventHandler(this.AngleSettingMY_Scroll);
             // 
             // SpeedSettingMP
@@ -950,11 +1095,11 @@
             this.AngleSettingMR.BackColor = System.Drawing.Color.WhiteSmoke;
             this.AngleSettingMR.LargeChange = 1;
             this.AngleSettingMR.Location = new System.Drawing.Point(116, 87);
-            this.AngleSettingMR.Maximum = 60;
+            this.AngleSettingMR.Maximum = 180;
             this.AngleSettingMR.Name = "AngleSettingMR";
             this.AngleSettingMR.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingMR.TabIndex = 98;
-            this.AngleSettingMR.Value = 30;
+            this.AngleSettingMR.Value = 180;
             this.AngleSettingMR.Scroll += new System.EventHandler(this.AngleSettingMR_Scroll);
             // 
             // SpeedSettingMB
@@ -1097,6 +1242,8 @@
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(label29);
+            this.panel5.Controls.Add(label28);
             this.panel5.Controls.Add(this.label5_8);
             this.panel5.Controls.Add(this.label5_57);
             this.panel5.Controls.Add(this.label5_47);
@@ -1199,11 +1346,9 @@
             this.AngleSettingLP.LargeChange = 1;
             this.AngleSettingLP.Location = new System.Drawing.Point(432, 86);
             this.AngleSettingLP.Maximum = 180;
-            this.AngleSettingLP.Minimum = 120;
             this.AngleSettingLP.Name = "AngleSettingLP";
             this.AngleSettingLP.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingLP.TabIndex = 101;
-            this.AngleSettingLP.Value = 150;
             this.AngleSettingLP.Scroll += new System.EventHandler(this.AngleSettingLP_Scroll);
             // 
             // AngleSettingLB
@@ -1211,12 +1356,11 @@
             this.AngleSettingLB.BackColor = System.Drawing.Color.WhiteSmoke;
             this.AngleSettingLB.LargeChange = 1;
             this.AngleSettingLB.Location = new System.Drawing.Point(353, 86);
-            this.AngleSettingLB.Maximum = 150;
-            this.AngleSettingLB.Minimum = 91;
+            this.AngleSettingLB.Maximum = 180;
             this.AngleSettingLB.Name = "AngleSettingLB";
             this.AngleSettingLB.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingLB.TabIndex = 100;
-            this.AngleSettingLB.Value = 120;
+            this.AngleSettingLB.Value = 45;
             this.AngleSettingLB.Scroll += new System.EventHandler(this.AngleSettingLB_Scroll);
             // 
             // AngleSettingLG
@@ -1225,8 +1369,7 @@
             this.AngleSettingLG.Enabled = false;
             this.AngleSettingLG.LargeChange = 15;
             this.AngleSettingLG.Location = new System.Drawing.Point(274, 86);
-            this.AngleSettingLG.Maximum = 120;
-            this.AngleSettingLG.Minimum = 60;
+            this.AngleSettingLG.Maximum = 180;
             this.AngleSettingLG.Name = "AngleSettingLG";
             this.AngleSettingLG.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingLG.SmallChange = 15;
@@ -1240,12 +1383,11 @@
             this.AngleSettingLY.BackColor = System.Drawing.Color.WhiteSmoke;
             this.AngleSettingLY.LargeChange = 1;
             this.AngleSettingLY.Location = new System.Drawing.Point(195, 86);
-            this.AngleSettingLY.Maximum = 89;
-            this.AngleSettingLY.Minimum = 30;
+            this.AngleSettingLY.Maximum = 180;
             this.AngleSettingLY.Name = "AngleSettingLY";
             this.AngleSettingLY.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingLY.TabIndex = 98;
-            this.AngleSettingLY.Value = 60;
+            this.AngleSettingLY.Value = 135;
             this.AngleSettingLY.Scroll += new System.EventHandler(this.AngleSettingLY_Scroll);
             // 
             // AngleSettingLR
@@ -1253,11 +1395,11 @@
             this.AngleSettingLR.BackColor = System.Drawing.Color.WhiteSmoke;
             this.AngleSettingLR.LargeChange = 1;
             this.AngleSettingLR.Location = new System.Drawing.Point(116, 86);
-            this.AngleSettingLR.Maximum = 60;
+            this.AngleSettingLR.Maximum = 180;
             this.AngleSettingLR.Name = "AngleSettingLR";
             this.AngleSettingLR.Size = new System.Drawing.Size(71, 45);
             this.AngleSettingLR.TabIndex = 97;
-            this.AngleSettingLR.Value = 30;
+            this.AngleSettingLR.Value = 180;
             this.AngleSettingLR.Scroll += new System.EventHandler(this.AngleSettingLR_Scroll);
             // 
             // label5_7
@@ -1346,7 +1488,7 @@
             this.label5_1.AutoSize = true;
             this.label5_1.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5_1.ForeColor = System.Drawing.Color.Red;
-            this.label5_1.Location = new System.Drawing.Point(116, 19);
+            this.label5_1.Location = new System.Drawing.Point(116, 22);
             this.label5_1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5_1.Name = "label5_1";
             this.label5_1.Size = new System.Drawing.Size(56, 19);
@@ -1856,10 +1998,11 @@
             // L_avgSpeed
             // 
             this.L_avgSpeed.Font = new System.Drawing.Font("Times New Roman", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.L_avgSpeed.Location = new System.Drawing.Point(280, 19);
+            this.L_avgSpeed.Location = new System.Drawing.Point(275, 21);
             this.L_avgSpeed.Name = "L_avgSpeed";
             this.L_avgSpeed.Size = new System.Drawing.Size(117, 32);
             this.L_avgSpeed.TabIndex = 69;
+            this.L_avgSpeed.TextChanged += new System.EventHandler(this.L_avgSpeed_TextChanged);
             // 
             // label19
             // 
@@ -1969,128 +2112,76 @@
             this.trainingTimeElapsed.Interval = 1000;
             this.trainingTimeElapsed.Tick += new System.EventHandler(this.trainingTimeElapsed_Tick);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.Successive_speed_lv_R);
-            this.groupBox1.Controls.Add(this.Successive_speed_lv_M);
-            this.groupBox1.Controls.Add(this.Successive_speed_lv_L);
-            this.groupBox1.Controls.Add(label26);
-            this.groupBox1.Controls.Add(label25);
-            this.groupBox1.Controls.Add(label24);
-            this.groupBox1.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(526, 346);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(519, 87);
-            this.groupBox1.TabIndex = 92;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Successive Mode Maximum Speed Settings";
-            // 
-            // label24
-            // 
-            label24.AutoSize = true;
-            label24.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            label24.Location = new System.Drawing.Point(19, 34);
-            label24.Name = "label24";
-            label24.Size = new System.Drawing.Size(40, 19);
-            label24.TabIndex = 97;
-            label24.Text = "Left :";
-            // 
-            // label25
-            // 
-            label25.AutoSize = true;
-            label25.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            label25.Location = new System.Drawing.Point(196, 34);
-            label25.Name = "label25";
-            label25.Size = new System.Drawing.Size(59, 19);
-            label25.TabIndex = 98;
-            label25.Text = "Middle :";
-            // 
-            // label26
-            // 
-            label26.AutoSize = true;
-            label26.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            label26.Location = new System.Drawing.Point(382, 34);
-            label26.Name = "label26";
-            label26.Size = new System.Drawing.Size(47, 19);
-            label26.TabIndex = 99;
-            label26.Text = "Right :";
-            // 
-            // Successive_speed_lv_L
-            // 
-            this.Successive_speed_lv_L.BackColor = System.Drawing.Color.White;
-            this.Successive_speed_lv_L.Location = new System.Drawing.Point(65, 32);
-            this.Successive_speed_lv_L.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.Successive_speed_lv_L.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.Successive_speed_lv_L.Name = "Successive_speed_lv_L";
-            this.Successive_speed_lv_L.Size = new System.Drawing.Size(71, 26);
-            this.Successive_speed_lv_L.TabIndex = 107;
-            this.Successive_speed_lv_L.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.Successive_speed_lv_L.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // Successive_speed_lv_M
-            // 
-            this.Successive_speed_lv_M.BackColor = System.Drawing.Color.White;
-            this.Successive_speed_lv_M.Location = new System.Drawing.Point(261, 32);
-            this.Successive_speed_lv_M.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.Successive_speed_lv_M.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.Successive_speed_lv_M.Name = "Successive_speed_lv_M";
-            this.Successive_speed_lv_M.Size = new System.Drawing.Size(71, 26);
-            this.Successive_speed_lv_M.TabIndex = 108;
-            this.Successive_speed_lv_M.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.Successive_speed_lv_M.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // Successive_speed_lv_R
-            // 
-            this.Successive_speed_lv_R.BackColor = System.Drawing.Color.White;
-            this.Successive_speed_lv_R.Location = new System.Drawing.Point(435, 32);
-            this.Successive_speed_lv_R.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.Successive_speed_lv_R.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.Successive_speed_lv_R.Name = "Successive_speed_lv_R";
-            this.Successive_speed_lv_R.Size = new System.Drawing.Size(71, 26);
-            this.Successive_speed_lv_R.TabIndex = 109;
-            this.Successive_speed_lv_R.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.Successive_speed_lv_R.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
             // Successive_timer
             // 
             this.Successive_timer.Interval = 1000;
             this.Successive_timer.Tick += new System.EventHandler(this.Successive_timer_Tick);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(label31);
+            this.groupBox2.Controls.Add(label30);
+            this.groupBox2.Controls.Add(label27);
+            this.groupBox2.Controls.Add(this.R_rat_id);
+            this.groupBox2.Controls.Add(this.M_rat_id);
+            this.groupBox2.Controls.Add(this.L_rat_id);
+            this.groupBox2.Location = new System.Drawing.Point(7, 349);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(511, 83);
+            this.groupBox2.TabIndex = 93;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Rat ID";
+            // 
+            // L_rat_id
+            // 
+            this.L_rat_id.Location = new System.Drawing.Point(23, 51);
+            this.L_rat_id.Name = "L_rat_id";
+            this.L_rat_id.Size = new System.Drawing.Size(139, 26);
+            this.L_rat_id.TabIndex = 0;
+            // 
+            // M_rat_id
+            // 
+            this.M_rat_id.Location = new System.Drawing.Point(178, 51);
+            this.M_rat_id.Name = "M_rat_id";
+            this.M_rat_id.Size = new System.Drawing.Size(139, 26);
+            this.M_rat_id.TabIndex = 1;
+            // 
+            // R_rat_id
+            // 
+            this.R_rat_id.Location = new System.Drawing.Point(333, 51);
+            this.R_rat_id.Name = "R_rat_id";
+            this.R_rat_id.Size = new System.Drawing.Size(139, 26);
+            this.R_rat_id.TabIndex = 2;
+            // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label27.Location = new System.Drawing.Point(223, 22);
+            label27.Name = "label27";
+            label27.Size = new System.Drawing.Size(59, 19);
+            label27.TabIndex = 98;
+            label27.Text = "Middle :";
+            // 
+            // label30
+            // 
+            label30.AutoSize = true;
+            label30.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label30.Location = new System.Drawing.Point(381, 22);
+            label30.Name = "label30";
+            label30.Size = new System.Drawing.Size(47, 19);
+            label30.TabIndex = 99;
+            label30.Text = "Right :";
+            // 
+            // label31
+            // 
+            label31.AutoSize = true;
+            label31.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label31.Location = new System.Drawing.Point(70, 22);
+            label31.Name = "label31";
+            label31.Size = new System.Drawing.Size(40, 19);
+            label31.TabIndex = 100;
+            label31.Text = "Left :";
             // 
             // Form1
             // 
@@ -2105,6 +2196,11 @@
             this.Text = "Wheel";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabPage2.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_R)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_M)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_L)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
@@ -2157,11 +2253,8 @@
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.tabControl1.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_L)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_M)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Successive_speed_lv_R)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2311,6 +2404,10 @@
         private System.Windows.Forms.NumericUpDown Successive_speed_lv_M;
         private System.Windows.Forms.NumericUpDown Successive_speed_lv_L;
         private System.Windows.Forms.Timer Successive_timer;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox R_rat_id;
+        private System.Windows.Forms.TextBox M_rat_id;
+        private System.Windows.Forms.TextBox L_rat_id;
     }
 }
 

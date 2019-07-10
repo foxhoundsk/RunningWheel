@@ -17,6 +17,8 @@ namespace NewTestWheel
 {
     public partial class Form1 : Form
     {
+        UInt32 debug_t = 0;
+
         string[] ui_speed = new string[11] {"0", "1.13", "1.63", "3.01", "3.36", "4.51", "5.05", "6.27", "6.77", "8.04", "8.67"};
         byte[] recvBuffer = new byte[64];
         byte[] dataBuffer = new byte[100];
@@ -309,6 +311,14 @@ namespace NewTestWheel
                     if (!GlobalBuffer.g_dataNeedProcess)
                         break;
 
+                    if (receiveDataList[0] == 0 || receiveDataList[1] == 0 || receiveDataList[2] == 0)
+                    {
+                        debug_t++;
+                        L_avgSpeed.Text = debug_t.ToString();
+                        GlobalBuffer.g_dataNeedProcess = false;
+                        break;
+                    }
+
                     if (Successive_mode.Checked) 
                     {
                         /* location displaying for wheel 0 */
@@ -341,7 +351,7 @@ namespace NewTestWheel
                                 RatLeftAngle.Text = RatPos.ToString();
                                 break;
                         }
-                        resultStreamWriter.WriteLine("L: " + RatPos.ToString() + "°" + "  " + ui_speed[(((GetCurrentTimestamp() - start_timestamp) / successive_L_tv) + 1) % ui_speed.Count()] + " cm/s");
+                        resultStreamWriter.WriteLine("L: " + RatPos.ToString() + "°" + "  " + ui_speed[(((GetCurrentTimestamp() - start_timestamp) / successive_L_tv) + 1) % ui_speed.Count()] + " m/min");
 
                         /* ------------------------------- */
                         /* location displaying for wheel 1 */
@@ -376,7 +386,7 @@ namespace NewTestWheel
                                 RatMiddleAngle.Text = RatPos.ToString();
                                 break;
                         }
-                        resultStreamWriter.WriteLine("M: " + RatPos.ToString() + "°" + "  " + ui_speed[(((GetCurrentTimestamp() - start_timestamp) / successive_M_tv) + 1) % ui_speed.Count()] + " cm/s");
+                        resultStreamWriter.WriteLine("M: " + RatPos.ToString() + "°" + "  " + ui_speed[(((GetCurrentTimestamp() - start_timestamp) / successive_M_tv) + 1) % ui_speed.Count()] + " m/min");
 
                         /* ------------------------------- */
 
@@ -412,7 +422,7 @@ namespace NewTestWheel
                         }
 
                         // we get speed from current speed level. plus one is bacause level starts from one but our divsion at early start is 0
-                        resultStreamWriter.WriteLine("R: " + RatPos.ToString() + "°" + "  " + ui_speed[(((GetCurrentTimestamp() - start_timestamp) / successive_R_tv) + 1) % ui_speed.Count()] + " cm/s");
+                        resultStreamWriter.WriteLine("R: " + RatPos.ToString() + "°" + "  " + ui_speed[(((GetCurrentTimestamp() - start_timestamp) / successive_R_tv) + 1) % ui_speed.Count()] + " m/min");
                         /* ------------------------------- */
 
                         serialPort.Write(DACspeed, 0, 6);
@@ -607,7 +617,7 @@ namespace NewTestWheel
                             break;
                     // POS case 3 deprecated since we changed total POS from 4 to 3 
                     }
-                    resultStreamWriter.WriteLine("L: " + RatPos.ToString() + "°" + "  " + RecordPos.ToString() + " cm/s");
+                    resultStreamWriter.WriteLine("L: " + RatPos.ToString() + "°" + "  " + RecordPos.ToString() + " m/min");
                     RatPos = receiveDataList[1];
                     //---------------------ratPos representation----
                     switch (RatPos)
@@ -777,7 +787,7 @@ namespace NewTestWheel
                     GlobalBuffer.g_dataNeedProcess = false;
                     break;
                 case ConnectionStatus.END_TRAINING_IN_PROGRESS:
-                    serialPort.Write(new char[6] { 'E', 'N', 'D', 'O', 'F', 'T' }, 0, 6); 
+                    serialPort.Write(new char[6] { '~', 'N', 'D', 'O', 'F', 'T' }, 0, 6); 
                     arm_Info.netState = ConnectionStatus.END_TRAINING_WAIT_PROGRESS;
                     break;
                 case ConnectionStatus.END_TRAINING_WAIT_PROGRESS:
@@ -805,9 +815,9 @@ namespace NewTestWheel
                     Successive_timer.Enabled = false;
                     if (Freeway_mode.Checked)
                     {
-                        resultStreamWriter.WriteLine("Left wheel avg. speed: " + ((round_L * wheelDiameter) / Freeway_timerCount).ToString() + " cm/s" + "\r\n");
-                        resultStreamWriter.WriteLine("Middle wheel avg. speed: " + ((round_M * wheelDiameter) / Freeway_timerCount).ToString() + " cm/s" + "\r\n");
-                        resultStreamWriter.WriteLine("Right wheel avg. speed: " + ((round_R * wheelDiameter) / Freeway_timerCount).ToString() + " cm/s" + "\r\n");
+                        resultStreamWriter.WriteLine("Left wheel avg. speed: " + ((round_L * wheelDiameter) / Freeway_timerCount).ToString() + " m/min" + "\r\n");
+                        resultStreamWriter.WriteLine("Middle wheel avg. speed: " + ((round_M * wheelDiameter) / Freeway_timerCount).ToString() + " m/min" + "\r\n");
+                        resultStreamWriter.WriteLine("Right wheel avg. speed: " + ((round_R * wheelDiameter) / Freeway_timerCount).ToString() + " m/min" + "\r\n");
                         resultStreamWriter.WriteLine("Total training time: " + (Freeway_timerCount / 60).ToString() + "minute(s) " + (Freeway_timerCount % 60).ToString() + "second(s)" +"\r\n");
 
                         resultStreamWriter.Flush();
@@ -817,6 +827,13 @@ namespace NewTestWheel
                         round_M = 0;
                         round_R = 0;
                     }
+
+                    /* insertion of rat ID (log file) */
+                    if (L_rat_id.Text != "") resultStreamWriter.WriteLine("Rat ID (Left): " + L_rat_id.Text);
+                    if (M_rat_id.Text != "") resultStreamWriter.WriteLine("Rat ID (Middle): " + M_rat_id.Text);
+                    if (R_rat_id.Text != "") resultStreamWriter.WriteLine("Rat ID (Right): " + R_rat_id.Text + "\r\n");
+
+
                     resultStreamWriter.Write("---------End of training---------" + "\n\r\n");
                     RatLeftAngle.BackColor = Color.DarkGray;
                     RatLeftAngle.BackColor = Color.DarkGray;
@@ -853,6 +870,7 @@ namespace NewTestWheel
                     receiveDataList.Add(buffer[i]);
                 }
                 GlobalBuffer.g_dataNeedProcess = true;
+                debug_t++;
             }
             catch
             {
@@ -936,6 +954,8 @@ namespace NewTestWheel
                 Schedule.Value = 100;
             if (Schedule.Value < 99)
             {
+                Schedule.Value = 100;
+                /* ignore sensor angle check
                 //檢查固定的AngleSettingLG、AngleSettingMG、AngleSettingRG是否為90°
                 int D = AngleSettingLG.Value, E = AngleSettingMG.Value, F = AngleSettingRG.Value;
                 if (D == 90 && E == 90 && F == 90)
@@ -1057,7 +1077,7 @@ namespace NewTestWheel
                     AngleSettingRP.BackColor = Color.Red;
                     MessageBox.Show("右側滾輪機台的第一及第二與第四及第五，感測器角度設定1>2、4>5，請檢察，謝謝!! ");
                 }
-
+                */
                 //檢查SpeedSettingLR、SpeedSettingLY、SpeedSettingLG、SpeedSettingLB、SpeedSettingLP有沒有設定
                 int K = (int)SpeedSettingLR.Value, L = (int)SpeedSettingLY.Value, M = (int)SpeedSettingLG.Value, N = (int)SpeedSettingLB.Value, O = (int)SpeedSettingLP.Value;
                 if (K == 0 && L == 0 && M == 0 && N == 0 && O == 0)
@@ -1067,7 +1087,7 @@ namespace NewTestWheel
                     SpeedSettingLG.BackColor = Color.Red;
                     SpeedSettingLB.BackColor = Color.Red;
                     SpeedSettingLP.BackColor = Color.Red;
-                    MessageBox.Show("左側滾輪的速度參數請選擇，謝謝!!");
+                    // MessageBox.Show("左側滾輪的速度參數請選擇，謝謝!!");
                 }
                 else if (L != 0 && M != 0 && N != 0)
                 {
@@ -1077,7 +1097,7 @@ namespace NewTestWheel
                     SpeedSettingLB.BackColor = Color.White;
                     SpeedSettingLP.BackColor = Color.White;
                     Schedule.Value += 10;
-                    MessageBox.Show("左側滾輪，第一及第五的速度參數設定是否有，為0的存在!");
+                    // MessageBox.Show("左側滾輪，第一及第五的速度參數設定是否有，為0的存在!");
                 }
 
                 //檢查SpeedSettingMR、SpeedSettingMY、SpeedSettingMG、SpeedSettingMB、SpeedSettingMP有沒有設定
@@ -1089,7 +1109,7 @@ namespace NewTestWheel
                     SpeedSettingMG.BackColor = Color.Red;
                     SpeedSettingMB.BackColor = Color.Red;
                     SpeedSettingMP.BackColor = Color.Red;
-                    MessageBox.Show("中間滾輪的速度參數請選擇，謝謝!!");
+                   //  MessageBox.Show("中間滾輪的速度參數請選擇，謝謝!!");
                 }
                 else if (L != 0 && M != 0 && N != 0)
                 {
@@ -1099,7 +1119,7 @@ namespace NewTestWheel
                     SpeedSettingMB.BackColor = Color.White;
                     SpeedSettingMP.BackColor = Color.White;
                     Schedule.Value += 10;
-                    MessageBox.Show("中間滾輪，第一及第五的速度參數設定是否有，為0的存在!");
+                    // MessageBox.Show("中間滾輪，第一及第五的速度參數設定是否有，為0的存在!");
                 }
 
                 //檢查SpeedSettingRR、SpeedSettingRY、SpeedSettingRG、SpeedSettingRB、SpeedSettingRP有沒有設定
@@ -1111,7 +1131,7 @@ namespace NewTestWheel
                     SpeedSettingRG.BackColor = Color.Red;
                     SpeedSettingRB.BackColor = Color.Red;
                     SpeedSettingRP.BackColor = Color.Red;
-                    MessageBox.Show("右側滾輪的速度參數請選擇，謝謝!!");
+                    // MessageBox.Show("右側滾輪的速度參數請選擇，謝謝!!");
                 }
                 else if (L != 0 && M != 0 && N != 0)
                 {
@@ -1121,7 +1141,7 @@ namespace NewTestWheel
                     SpeedSettingRB.BackColor = Color.White;
                     SpeedSettingRP.BackColor = Color.White;
                     Schedule.Value += 10;
-                    MessageBox.Show("右側滾輪，第一及第五的速度參數設定是否有，為0的存在!");
+                    // MessageBox.Show("");
                 }
 
                 // 時間設定最少1
@@ -1161,7 +1181,7 @@ namespace NewTestWheel
                     Schedule.Value += 10;
                 }
             }
-            if (Schedule.Value == 100)
+            if (Schedule.Value >= 100)
             {      
                 SettingStartButton.Enabled = true;
             }
@@ -1244,6 +1264,11 @@ namespace NewTestWheel
             TrainingState.ForeColor = Color.Red;
             TrainingState.Text = "Non-Training";
             trainingTimeElapsed.Enabled = false;            
+        }
+
+        private void L_avgSpeed_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void trainingTimeElapsed_Tick(object sender, EventArgs e)
