@@ -1,4 +1,4 @@
-// Ver 2.0.0
+// Ver 3.0.0
 /*
     1. Since the complicate step to setup wifi module(esp8266) (but I don't think so, you use wifi you should configure connection on PC each time), we temporary deprecated the wifi transfer method and use USB-TTL instead.
     2. The IR sensors (RX) we using now got unstable output signal, which cause us can't use timer-trigger way to implement the system, which is more power-efficient. Maybe a short timer trigger is satisfied, this is TODO.
@@ -27,7 +27,13 @@ void main()
     IE_EA = 1;	// Enable each interrupt according to its individual mask setting, you can call this a master switch to interrupt
         
     while(1)
-    {			
+    {	
+/*			
+				if (!p1_0)
+					LED0 = 0;
+				else
+					LED0 = 1;
+			*/
         //wifiProcess(); re-enable once wifi got smooth setup and cleanup
         uartTransmission();
         escalatorProcess();

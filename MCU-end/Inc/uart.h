@@ -37,6 +37,7 @@ typedef enum
     IDLE,
     TX_BUSY,
     RX_BUSY,
+    END_IN_PROGRESS,
     RX_DONE
 }TaskState;
 

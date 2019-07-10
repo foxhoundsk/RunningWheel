@@ -109,6 +109,16 @@ void uartTransmission(void)
 				memset(&wifiRecvBuffer, 0, RECV_BUFFER_SIZE);
 			}
 			break;
+		case END_IN_PROGRESS:
+			/* this state is intend to make a grace period to let the MCU receive
+			   the data of end training notification properly, without stay in
+			   this state, if the GUI send end data and DAC data concurrently, MCU
+			   may messed up by handling these data, so we stay here to receive
+			   end data silently. 
+			   
+			   note: for more information, please refer to UART ISR at interrupt.c
+			*/
+			break;
 		case RX_DONE:
 			if (uartIsDataKnockDoor())	break;	/* this determination style may implement to esp8266.c */
 			if (uartIsEndTrainData())	break;		
@@ -128,12 +138,12 @@ void uartApplyDACData(void)
 
 	SFRPAGE = PG4_PAGE;
 
-	DAC0L = wifiRecvBuffer[UART_DAC_SIZE - 6];
-	DAC0H = wifiRecvBuffer[UART_DAC_SIZE - 5];
-	DAC1L = wifiRecvBuffer[UART_DAC_SIZE - 4];
-	DAC1H = wifiRecvBuffer[UART_DAC_SIZE - 3];
-	DAC2L = wifiRecvBuffer[UART_DAC_SIZE - 2];
-	DAC2H = wifiRecvBuffer[UART_DAC_SIZE - 1];
+	DAC0L = wifiRecvBuffer[UART_DAC_SIZE - 6] & 0x0fff;
+	DAC0H = wifiRecvBuffer[UART_DAC_SIZE - 5] & 0x0fff;
+	DAC1L = wifiRecvBuffer[UART_DAC_SIZE - 4] & 0x0fff;
+	DAC1H = wifiRecvBuffer[UART_DAC_SIZE - 3] & 0x0fff;
+	DAC2L = wifiRecvBuffer[UART_DAC_SIZE - 2] & 0x0fff;
+	DAC2H = wifiRecvBuffer[UART_DAC_SIZE - 1] & 0x0fff;
 	
 	SFRPAGE = savedpage;
 }
@@ -208,7 +218,7 @@ bool uartIsDataKnockDoor(void)	/* with this implementation, data similarity shou
 bool uartIsEndTrainData(void)	/* with this implementation, data similarity should be considered */
 {
 	uint8_t index;
-	if ((wifiRecvBuffer[0] == '~') && (wifiRecvBuffer[1] == 'N') && (wifiRecvBuffer[2] == 'D'))	
+	if ((wifiRecvBuffer[0] == /*0x7E*/ '~') && (wifiRecvBuffer[1] == 'N') && (wifiRecvBuffer[2] == 'D'))	
 	{		
 		memset(&wifiSendBuffer, 0, SEND_BUFFER_SIZE);
 		wifiSendBuffer[0] = 'A';
@@ -245,6 +255,7 @@ bool uartIsEndTrainData(void)	/* with this implementation, data similarity shoul
 		wifi.currentTick = mcu.sysTick;
 		while ((wifi.currentTick + DAC_APPLY_TIME) >= mcu.sysTick);
 		wifi.currentTick = 0;
+		wifi.isDataChanged = 0;
 
 		if (escalator.mode == SUCCESSIVE)
 		{
