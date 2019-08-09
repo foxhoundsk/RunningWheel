@@ -17,8 +17,6 @@ namespace NewTestWheel
 {
     public partial class Form1 : Form
     {
-        UInt32 debug_t = 0;
-
         string[] ui_speed = new string[11] {"0", "1.13", "1.63", "3.01", "3.36", "4.51", "5.05", "6.27", "6.77", "8.04", "8.67"};
         byte[] recvBuffer = new byte[64];
         byte[] dataBuffer = new byte[100];
@@ -310,14 +308,6 @@ namespace NewTestWheel
                     TrainingState.Text = "In Progress";
                     if (!GlobalBuffer.g_dataNeedProcess)
                         break;
-
-                    if (receiveDataList[0] == 0 || receiveDataList[1] == 0 || receiveDataList[2] == 0)
-                    {
-                        debug_t++;
-                        L_avgSpeed.Text = debug_t.ToString();
-                        GlobalBuffer.g_dataNeedProcess = false;
-                        break;
-                    }
 
                     if (Successive_mode.Checked) 
                     {
