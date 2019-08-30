@@ -264,7 +264,7 @@ void escalatorProcess(void)
                 if (p1_3) escalator.arm[1].variability[POS_2of5]++;  else escalator.arm[1].variability[POS_2of5] = 0;
                 if (p1_5) escalator.arm[1].variability[POS_3of5]++;  else escalator.arm[1].variability[POS_3of5] = 0;
                 if (p1_6) escalator.arm[1].variability[POS_4of5]++;  else escalator.arm[1].variability[POS_4of5] = 0;
-				// if (p1_7) escalator.arm[1].variability[POS_5of5]++;  else escalator.arm[1].variability[POS_5of5] = 0;
+				if (p1_7) escalator.arm[1].variability[POS_5of5]++;  else escalator.arm[1].variability[POS_5of5] = 0;
                 for (index2 = 4; index2 >= 0; index2--)
                 {
                     if (escalator.arm[1].variability[index2] >= 1500)
