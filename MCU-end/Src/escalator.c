@@ -194,9 +194,9 @@ void escalatorProcess(void)
 
                         if (escalator.arm[0].lastPos != escalator.arm[0].currentPos) /* check if the current pos equal to previous pos, if it doesn't, trigger isDataChanged flag which inform wifi module we got data to send */
                         {
-                            if (escalator.mode == SUCCESSIVE) // emergency stop. reson why I add here is to prevent duplicate detection
+                            if (escalator.mode == SUCCESSIVE) // emergency stop
                             {
-                                if (index2 == POS_1of5) // emergency stop. reson why I add here is to prevent duplicate detection
+                                if (index2 == POS_5of5 && !L_emer_flag) // `POS_5of5` is now tail of the rat
                                 { 
                                     L_dac_reg = 0; // reset for new save
 
@@ -214,7 +214,7 @@ void escalatorProcess(void)
 
                                     L_emer_flag = 1;
                                 }
-                                else if (L_emer_flag) // restore the value of DAC reg of L_wheel
+                                else if (index2 != POS_5of5 && L_emer_flag) // restore the value of DAC reg of L_wheel
                                 {
                                     savedpage = SFRPAGE;
                                     SFRPAGE = PG4_PAGE;
@@ -227,9 +227,14 @@ void escalatorProcess(void)
                                     L_emer_flag = 0; // clear the flag for next use
                                 }
                             }
-                            else if (0) // normal mode
+                            else if (0) // emergency stop for normal mode, note that this context is currently buggy,
+                                        // which will cause specific wheel continue its operation once new data set
+                                        // received, to fix this, you should keep tracking if DAC register has non-zero
+                                        // value inside, this mechanism is similar to which `SUCCESSIVE` mode used above
+                                        // (line ~133 in this commit)
+
                             {
-                                if (index2 == POS_1of5) // emergency stop. reson why I add here is to prevent duplicate detection
+                                if (index2 == POS_5of5)
                                 { 
                                     L_dac_reg = 0; // reset for new save
 
@@ -245,7 +250,10 @@ void escalatorProcess(void)
                                 }
                                 else if (L_emer_flag) // rat arrived a new position which is not position 1,
                                                       // we just reset the flag since the new speed value is 
-                                                      // coming in short time
+                                                      // coming in short time. (WARN) If trigger of this
+                                                      // context is too close (between wheels), we may not
+                                                      // receive data for specific wheel, which means we will
+                                                      // need next trigger of detection of new location.
                                 {
                                     L_emer_flag = 0; // clear the flag for next use
                                 }
@@ -264,7 +272,7 @@ void escalatorProcess(void)
                 if (p1_3) escalator.arm[1].variability[POS_2of5]++;  else escalator.arm[1].variability[POS_2of5] = 0;
                 if (p1_5) escalator.arm[1].variability[POS_3of5]++;  else escalator.arm[1].variability[POS_3of5] = 0;
                 if (p1_6) escalator.arm[1].variability[POS_4of5]++;  else escalator.arm[1].variability[POS_4of5] = 0;
-				if (p1_7) escalator.arm[1].variability[POS_5of5]++;  else escalator.arm[1].variability[POS_5of5] = 0;
+							  if (p1_7) escalator.arm[1].variability[POS_5of5]++;  else escalator.arm[1].variability[POS_5of5] = 0;
                 for (index2 = 4; index2 >= 0; index2--)
                 {
                     if (escalator.arm[1].variability[index2] >= 1500)
@@ -279,7 +287,7 @@ void escalatorProcess(void)
                         {
                             if (escalator.mode == SUCCESSIVE)
                             {
-                                if (index2 == POS_1of5) // emergency stop. reson why I add here is to prevent duplicate detection
+                                if (index2 == POS_5of5 && !M_emer_flag)
                                 {
                                     M_dac_reg = 0; // reset for new save
 
@@ -297,7 +305,7 @@ void escalatorProcess(void)
 
                                     M_emer_flag = 1;
                                 }
-                                else if (M_emer_flag) // restore the value of DAC reg of M_wheel
+                                else if (index2 != POS_5of5 && M_emer_flag) // restore the value of DAC reg of M_wheel
                                 {
                                     savedpage = SFRPAGE;
                                     SFRPAGE = PG4_PAGE;
@@ -312,7 +320,7 @@ void escalatorProcess(void)
                             }
                             else if (0)
                             {
-                                if (index2 == POS_1of5) // emergency stop. reson why I add here is to prevent duplicate detection
+                                if (index2 == POS_1of5)
                                 { 
                                     M_dac_reg = 0; // reset for new save
 
@@ -358,7 +366,7 @@ void escalatorProcess(void)
                         {
                             if (escalator.mode == SUCCESSIVE)
                             {
-                                if (index2 == POS_1of5) // emergency stop. reson why I add here is to prevent duplicate detection
+                                if (index2 == POS_5of5 && !R_emer_flag)
                                 {
                                     R_dac_reg = 0; // reset for new save
 
@@ -376,7 +384,7 @@ void escalatorProcess(void)
 
                                     R_emer_flag = 1;
                                 }
-                                else if (R_emer_flag) // restore the value of DAC reg of R_wheel
+                                else if (index2 != POS_5of5 && R_emer_flag) // restore the value of DAC reg of R_wheel
                                 {
                                     savedpage = SFRPAGE;
                                     SFRPAGE = PG4_PAGE;
@@ -391,7 +399,7 @@ void escalatorProcess(void)
                             }
                             else if (0)
                             {
-                                if (index2 == POS_1of5) // emergency stop. reson why I add here is to prevent duplicate detection
+                                if (index2 == POS_1of5)
                                 { 
                                     R_dac_reg = 0; // reset for new save
 
