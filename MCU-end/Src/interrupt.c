@@ -121,8 +121,8 @@ void TIMER2_ISR(void) interrupt TIMER2_IRQn
             savedPage = SFRPAGE;
 	        SFRPAGE = PG4_PAGE;
 
-            DAC1L = (uint8_t) dac_speed_table[ssv_lv_idx_R % MAX_SPEED_LV] & 0xff;
-	        DAC1H = (uint8_t) (dac_speed_table[ssv_lv_idx_R % MAX_SPEED_LV] >> 8);
+            DAC2L = (uint8_t) dac_speed_table[ssv_lv_idx_R % MAX_SPEED_LV] & 0xff;
+	        DAC2H = (uint8_t) (dac_speed_table[ssv_lv_idx_R % MAX_SPEED_LV] >> 8);
             ssv_lv_idx_R++;
             
             SFRPAGE = savedPage;
