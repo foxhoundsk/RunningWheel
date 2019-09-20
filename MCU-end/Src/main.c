@@ -1,4 +1,4 @@
-// Ver 3.0.0
+// Ver 3.1.0
 /*
     1. Since the complicate step to setup wifi module(esp8266) (but I don't think so, you use wifi you should configure connection on PC each time), we temporary deprecated the wifi transfer method and use USB-TTL instead.
     2. The IR sensors (RX) we using now got unstable output signal, which cause us can't use timer-trigger way to implement the system, which is more power-efficient. Maybe a short timer trigger is satisfied, this is TODO.
