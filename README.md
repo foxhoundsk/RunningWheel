@@ -28,7 +28,7 @@ This training platform has three set of running wheel, each one has five set of 
   - Monitoring                                             
     ![Screen](./GUI_monitor.png)
 - Hardware                                                      
-  ![Screen](./hardware.jpg)
+  ![Screen](./hardware.jpg)                                     
   (Actually, we have three set of this.)
   
 
