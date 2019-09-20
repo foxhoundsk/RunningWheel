@@ -21,5 +21,16 @@ This training platform has three set of running wheel, each one has five set of 
     - Common IR led, drive with 38Khz pulse.
   - [IR receiver](https://www.seeedstudio.com/Grove-Infrared-Receiver.html)
 
+# Screenshot & Picture
+- GUI
+  - Settings                                             
+    ![Screen](./GUI_setting.png)
+  - Monitoring                                             
+    ![Screen](./GUI_monitor.png)
+- Hardware                                                      
+  ![Screen](./hardware.jpg)
+  (Actually, we have three set of this.)
+  
+
 # TODO
 - Merge the calibration mode into the main program, then we don't need to re-flash the mcu each time we want to do the calibration.
