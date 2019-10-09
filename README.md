@@ -34,3 +34,5 @@ This training platform has three set of running wheel, each one has five set of 
 
 # TODO
 - Merge the calibration mode into the main program, then we don't need to re-flash the mcu each time we want to do the calibration.
+- Currently, our emergency stop is rely on busy evaluating pos of each wheel. If we prevent updating of DAC for dedicated wheel, we can save such busy evaluating, which has one more branches than the proposed one.
+
