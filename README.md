@@ -29,8 +29,8 @@ This training platform has three set of running wheel, each one has five set of 
     ![Screen](./GUI_monitor.png)
 - Hardware                                                      
   ![Screen](./hardware.jpg)                                     
-  (Actually, we have three set of this.)
   
+  ![Screen](./S__93904901.jpg)                                     
 
 # TODO
 - Merge the calibration mode into the main program, then we don't need to re-flash the mcu each time we want to do the calibration.
